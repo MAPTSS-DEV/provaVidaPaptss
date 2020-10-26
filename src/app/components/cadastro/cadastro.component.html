@@ -9,7 +9,8 @@
 </div>
 
 <div mat-dialog-content>
-    <mat-tab-group [dynamicHeight]="true" [dynamicWidth]="true">
+    <mat-tab-group [dynamicHeight]="true" [dynamicWidth]="true" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChanged($event);">
+
         <form name="CadastroForm" [formGroup]="CadastroForm" (ngSubmit)="OnSubmit()" novalidate>
 
             <mat-tab>
@@ -18,6 +19,7 @@
                     Dados Pessoais
                 </ng-template>
                 <br>
+                <!-- <form name="CadastroForm" [formGroup]="dadosPessoaisForm" novalidate> -->
                 <div class="row">
                     <div class="col-md-12">
                         <br>
@@ -57,7 +59,7 @@
                     <div class="col-md-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Nome Completo</mat-label>
-                            <input matInput formControlName="Trabalhador" style="width: 100%;" />
+                            <input matInput formControlName="Trabalhador" style="width: 100%;" readonly/>
                             <mat-error *ngIf="CadastroForm.get('Trabalhador').hasError('required')">
                                 Nome do Trabalhador é obrigatório. </mat-error>
                             <mat-error *ngIf="CadastroForm.get('Trabalhador').hasError('pattern')">
@@ -72,21 +74,20 @@
                         </mat-form-field>
                     </div>
 
-
                     <div class="col-md-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Número do B.I</mat-label>
-                            <input matInput formControlName="Documento" style="width: 100%;" />
+                            <input matInput formControlName="Documento" style="width: 100%;" required/>
                             <!--  <mat-icon matSuffix class="secondary-text">work</mat-icon> -->
                             <mat-error *ngIf="CadastroForm.get('Documento').hasError('required')">
-                                Nome do Trabalhador é obrigatório. </mat-error>
+                                Número do BI é obrigatório. </mat-error>
                             <!--  <mat-error *ngIf="CadastroForm.get('Trabalhador').hasError('pattern')" > números não são permitido neste campo. </mat-error> -->
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
                         <mat-form-field appearance="outline" class="mr-sm-12" fxFlex>
                             <mat-label>Telefone</mat-label>
-                            <input matInput formControlName="Telefone" maxlength="10" />
+                            <input matInput formControlName="Telefone" maxlength="10" required/>
                             <mat-icon matSuffix class="secondary-text">local_phone</mat-icon>
                             <mat-error *ngIf="CadastroForm.get('Telefone').hasError('required')">
                                 O Telefone é obrigatório. </mat-error>
@@ -104,7 +105,7 @@
                     <div class="col-md-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Data de emissão</mat-label>
-                            <input matInput [matDatepicker]="DataEmissaoPicker" name="DataEmissao" formControlName="DataEmissao" readonly>
+                            <input matInput [matDatepicker]="DataEmissaoPicker" name="DataEmissao" formControlName="DataEmissao" required>
                             <mat-datepicker-toggle matSuffix [for]="DataEmissaoPicker"></mat-datepicker-toggle>
                             <mat-datepicker #DataEmissaoPicker></mat-datepicker>
                             <mat-error *ngIf="CadastroForm.get('DataEmissao').hasError('required')">
@@ -115,7 +116,7 @@
                     <div class="col-md-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Data de Validade</mat-label>
-                            <input matInput [matDatepicker]="DataValidadePicker" name="DataValidade" formControlName="DataValidade" readonly>
+                            <input matInput [matDatepicker]="DataValidadePicker" name="DataValidade" formControlName="DataValidade" required>
                             <mat-datepicker-toggle matSuffix [for]="DataValidadePicker"></mat-datepicker-toggle>
                             <mat-datepicker #DataValidadePicker></mat-datepicker>
                             <mat-error *ngIf="CadastroForm.get('DataValidade').hasError('required')">
@@ -165,7 +166,7 @@
                     <div class="col-md-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Data de Nascimento</mat-label>
-                            <input matInput [matDatepicker]="DataNascimentoPicker" name="DataNascimento" formControlName="DataNascimento" readonly>
+                            <input matInput [matDatepicker]="DataNascimentoPicker" name="DataNascimento" formControlName="DataNascimento" required>
                             <mat-datepicker-toggle matSuffix [for]="DataNascimentoPicker"></mat-datepicker-toggle>
                             <mat-datepicker #DataNascimentoPicker></mat-datepicker>
                             <mat-error *ngIf="CadastroForm.get('DataNascimento').hasError('required')">
@@ -177,8 +178,8 @@
                             <mat-label>Nome do Pai</mat-label>
                             <input matInput formControlName="Nome_Pai" style="width: 100%;" />
                             <!--   <mat-icon matSuffix class="secondary-text">work</mat-icon> -->
-                            <mat-error *ngIf="CadastroForm.get('Nome_Pai').hasError('required')">
-                                Nome do Pai é obrigatório. </mat-error>
+                            <!-- <mat-error *ngIf="CadastroForm.get('Nome_Pai').hasError('required')">
+                                Nome do Pai é obrigatório. </mat-error> -->
                         </mat-form-field>
                     </div>
 
@@ -186,8 +187,8 @@
                         <mat-form-field appearance="outline">
                             <mat-label>Nome da Mãe</mat-label>
                             <input matInput formControlName="Nome_Mae" style="width: 100%;" />
-                            <mat-error *ngIf="CadastroForm.get('Nome_Mae').hasError('required')">
-                                Nome da Mãe é obrigatório. </mat-error>
+                            <!-- <mat-error *ngIf="CadastroForm.get('Nome_Mae').hasError('required')">
+                                Nome da Mãe é obrigatório. </mat-error> -->
                         </mat-form-field>
                     </div>
 
@@ -197,8 +198,7 @@
                     <div class="col-md-6 col-lg-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Número de Agente</mat-label>
-                            <input matInput formControlName="NIF" style="width:
-                                100%;" />
+                            <input matInput formControlName="NIF" style="width: 100%;" required/>
                             <!--  <mat-icon matSuffix class="secondary-text">work</mat-icon> -->
                             <mat-error *ngIf="CadastroForm.get('NIF').hasError('required')">
                                 Número de Agente do Trabalhador é obrigatório.
@@ -210,7 +210,7 @@
                     <div class="col-md-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Número Seg. Social</mat-label>
-                            <input matInput formControlName="SegSocial" style="width: 100%;" />
+                            <input matInput formControlName="SegSocial" style="width: 100%;" required/>
                             <!--  <mat-icon matSuffix class="secondary-text">work</mat-icon> -->
                             <mat-error *ngIf="CadastroForm.get('SegSocial').hasError('required')">
                                 Número da Segurança social do Trabalhador é obrigatório. </mat-error>
@@ -218,6 +218,7 @@
                         </mat-form-field>
                     </div>
                 </div>
+                <!-- </form> -->
             </mat-tab>
 
             <mat-tab>
@@ -227,8 +228,7 @@
                 </ng-template>
                 <br>
                 <h3><b>Naturalidade</b></h3>
-
-
+                <!-- <form name="CadastroForm" [formGroup]="CadastroForm" (ngSubmit)="OnSubmit()" novalidate> -->
                 <div class="row">
                     <div class="col-md-6">
                         <mat-form-field appearance="outline">
@@ -301,7 +301,7 @@
                     <div class="col-md-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Bairro</mat-label>
-                            <input matInput formControlName="Bairro" style="width: 100%;" />
+                            <input matInput formControlName="Bairro" style="width: 100%;" required/>
                             <!--  <mat-icon matSuffix class="secondary-text">work</mat-icon> -->
                             <!--  <mat-error *ngIf="CadastroForm.get('Bairro').hasError('required')" > Número da Segurança social do Trabalhador é obrigatório. </mat-error> -->
                             <!--  <mat-error *ngIf="CadastroForm.get('Trabalhador').hasError('pattern')" > números não são permitido neste campo. </mat-error> -->
@@ -366,16 +366,17 @@
                     <div class="col-md-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Bairro</mat-label>
-                            <input matInput formControlName="BairroMorada" style="width: 100%;" />
+                            <input matInput formControlName="BairroMorada" style="width: 100%;" required/>
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Residencia</mat-label>
-                            <input matInput formControlName="Residencia" style="width: 100%;" />
+                            <input matInput formControlName="Residencia" style="width: 100%;" required/>
                         </mat-form-field>
                     </div>
                 </div>
+                <!-- </form> -->
             </mat-tab>
 
             <mat-tab>
@@ -384,6 +385,7 @@
                     Vinculo
                 </ng-template>
                 <br>
+                <!-- <form name="CadastroForm" [formGroup]="CadastroForm" (ngSubmit)="OnSubmit()" novalidate> -->
                 <!--  <h3><b>Vinculo</b></h3> -->
                 <div class="row">
                     <div class="col-md-12">
@@ -431,7 +433,7 @@
                     <div class="col-md-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Data de Vinculo</mat-label>
-                            <input matInput [matDatepicker]="Data_AdmissaoPicker" name="Data_Admissao" formControlName="Data_Admissao" readonly>
+                            <input matInput [matDatepicker]="Data_AdmissaoPicker" name="Data_Admissao" formControlName="Data_Admissao" required>
                             <mat-datepicker-toggle matSuffix [for]="Data_AdmissaoPicker"></mat-datepicker-toggle>
                             <mat-datepicker #Data_AdmissaoPicker></mat-datepicker>
                             <mat-error *ngIf="CadastroForm.get('Data_Admissao').hasError('required')">
@@ -527,9 +529,10 @@
                     </div>
                 </div>
                 <div>
-                    <button type="submit" (click)="OnSubmit()" style="margin:5px;" class="btn btn-success">Salvar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Sair</button>
+                    <button type="submit" (click)="OnSubmit()" style="margin:5px;" [disabled]="!CadastroForm.valid" class="btn btn-success">Salvar</button>
+                    <button type="button" class="btn btn-danger" (click)="dismiss()" data-dismiss="modal">Sair</button>
                 </div>
+                <!-- </form> -->
             </mat-tab>
         </form>
 

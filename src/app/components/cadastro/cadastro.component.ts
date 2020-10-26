@@ -1,3 +1,4 @@
+import { FIELDS_FORM_COMPLEMENTARES, FIELDS_FORM_PERSON } from './../../../assets/static/data';
 import { Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -26,9 +27,11 @@ export class CadastroComponent implements OnInit {
     }
   };
   CadastroForm: FormGroup;
+
   cadastro: Cadastro[] = [];
   fileToUpload: File = null;
   vfile;
+  selectedTabIndex = 0;
 
   prov: Provincias[];
   Mun: Municipios[];
@@ -73,8 +76,10 @@ export class CadastroComponent implements OnInit {
     this.CadastroForm = this._formBuilder.group({
       Id_Trabalhador: ['', Validators.required],
       Trabalhador: ['', Validators.required],
-      Nome_Pai: ['', Validators.required],
-      Nome_Mae: ['', Validators.required],
+      TrabalhadorNomeCorrigido: [''],
+      Telefone: [''],
+      Nome_Pai: [''],
+      Nome_Mae: [''],
       DataNascimento: ['', Validators.required],
       id_estado_civil: ['', Validators.required],
       SegSocial: ['', Validators.required],
@@ -83,16 +88,16 @@ export class CadastroComponent implements OnInit {
       Documento: ['', Validators.required],
       NIF: ['', Validators.required],
       Id_sexo: ['', Validators.required],
+      LocalEmissao: ['', Validators.required],
+
       Id_Nacionalidade: ['', Validators.required],
       Id_Provincia: ['', Validators.required],
       Id_Municipio: ['', Validators.required],
-      LocalEmissao: ['', Validators.required],
-      Telefone: ['', Validators.required],
       Situacao: ['', Validators.required],
       Motivo: ['', Validators.required],
       Foto: [''],
       Bairro: ['', Validators.required],
-      TrabalhadorNomeCorrigido: [''],
+
       Id_Distrito: ['', Validators.required],
       Id_Comuna: ['', Validators.required],
       Id_Trabalhador_Vinculo: ['', Validators.required],
@@ -253,8 +258,39 @@ export class CadastroComponent implements OnInit {
     }
   }
 
-  public dismiss(){
-      this.cadastroDialogRef.close();
+  // Novos metodos adicionados
+  private validarFormulario(fieldsToValidate: string[]): boolean{
+    var result: boolean = true;
+     fieldsToValidate.forEach(element => {
+      // console.log('Element', element);
+      if (this.CadastroForm.get(element).hasError('required')) {
+         console.log('Campo não prienchido', element);
+         result = false;
+      }
+    });
+    return result;
+  }
+
+  onTabChanged($event) {
+    let clickedIndex = $event.index;
+    if (!this.CadastroForm.valid) {
+      console.log(this.validarFormulario(FIELDS_FORM_PERSON));
+      console.log(this.validarFormulario(FIELDS_FORM_COMPLEMENTARES));
+      
+      if (!this.validarFormulario(FIELDS_FORM_PERSON)){
+        this.selectedTabIndex = 0
+      }else if(!this.validarFormulario(FIELDS_FORM_COMPLEMENTARES)){
+        this.selectedTabIndex = 1
+      }else {
+        this.selectedTabIndex = 3
+      }
+    }else{
+      this.selectedTabIndex = clickedIndex;
+    }
+  }
+
+  public dismiss() {
+    this.cadastroDialogRef.close();
   }
 
   onRefresh() {
@@ -296,6 +332,7 @@ export class CadastroComponent implements OnInit {
       observer.complete();
     });
   }
+
   OnSubmit() {
     //   console.log(this.CadastroForm.value);
     if (this.CadastroForm.valid) {
@@ -305,14 +342,14 @@ export class CadastroComponent implements OnInit {
         Swal.fire({
           position: 'center',
           icon: 'success',
-          title: `Candidato ${this.CadastroForm.value.Trabalhador} atualisado feita com sucesso`,
+          title: `Candidato ${this.CadastroForm.value.Trabalhador} atualisado com sucesso`,
           showConfirmButton: false,
           timer: 3500
         });
         this.dismiss();
-      },err => {
-          console.log('Erro ao Salvar candidato', err);
-        }
+      }, err => {
+        console.log('Erro ao Salvar candidato', err);
+      }
       );
 
       // Actualiza(formData: FormData) {
