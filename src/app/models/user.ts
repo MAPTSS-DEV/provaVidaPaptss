@@ -1,11 +1,8 @@
-﻿import { Role } from './role';
-export class User {
-    id: string;
-    username: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    role: Role;
-    access_token: string;
-    token_type: string;
+﻿export class User {
+    Id_Usuario: number;
+    Usuario: string;
+    Senha: string;
+    Status: string;
+    Id_Perfil: number;
+    Data_Registo: Date;
 }

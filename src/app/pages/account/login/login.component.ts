@@ -45,15 +45,27 @@ export class LoginComponent implements OnInit {
         }
 
         this.loading = true;
-        this.accountService.login(this.f.username.value, this.f.password.value)
-            .pipe(first())
-            .subscribe(
-                data => {
-                    this.router.navigate([this.returnUrl]);
-                },
-                error => {
-                    this.alertService.error(error);
-                    this.loading = false;
-                });
+        this.accountService.userAuthentication(this.form.value).subscribe((response:any) => {
+            console.log('Response after login', response);
+            localStorage.setItem('userToken', response.access_token);
+            localStorage.setItem('user', this.f.username.value);
+            localStorage.setItem('role', response.Role);
+            localStorage.setItem('id', response.IdUsuario);
+            localStorage.setItem('loginStatus', '1');
+
+            this.router.navigate(['/home']);
+        }, (err) => {
+            console.log('Ocorreu um erro ao fazer login', err);
+        });
+        // this.accountService.login(this.f.username.value, this.f.password.value)
+        //     .pipe(first())
+        //     .subscribe(
+        //         data => {
+        //             this.router.navigate([this.returnUrl]);
+        //         },
+        //         error => {
+        //             this.alertService.error(error);
+        //             this.loading = false;
+        //         });
     }
 }

@@ -1,34 +1,123 @@
 ﻿<div class="p-4">
     <div class="container">
-        <h1>Hi {{user.firstName}}!</h1>
-        <p>You're logged in with Angular 9!!</p>
-        <p><a routerLink="/admin">Admin Page Manager</a></p>
+        <h1>
+            <mat-icon>account_box</mat-icon>
+            Ola {{user}}!
+        </h1>
+        <p>Bem vindo ao programa de prova de vida do INSS</p>
     </div>
-    <!-- <div class="container">
-        <table class="table table-striped table-inverse table-responsive">
-            <thead class="thead-inverse">
-                <tr>
-                    <th>id</th>
-                    <th>Titulo</th>
-                    <th>ISBN</th>
-                    <th>Sinopse</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <ng-container *ngFor="let book of bookList">
-                    <tr>
-                        <td scope="row">{{book.id}}</td>
-                        <td>{{book.title}}</td>
-                        <td>{{book.isbn}}</td>
-                        <td>{{book.sinoptics}}</td>
-                        <td>
-                            <a name="" id="" class="btn btn-primary" href="#"><i class="fa fa-trash"></i></a>
-                        </td>
-                    </tr>
-                </ng-container>
+    <div class="container">
+        <!-- <br> -->
+        <!-- <app-sidebar></app-sidebar> -->
+        <mat-card>
+            <!-- content-wrapper -->
+            <div class="container-fluild">
+                <br />
+                <h4>
+                    <label style="margin: 0;">Listagem de Funcionários</label>
+                </h4>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a>
+                            <h6>você esta em: Prova de vida</h6>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">Listagem de Funcionários
+                    </li>
+                </ol>
+                <br>
+                <form [formGroup]="filterForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Pesquisar</mat-label>
+                                <mat-icon matSuffix class="secondary-text">search</mat-icon>
+                                <input matInput (keyup)="applyFilter($event)" placeholder="pesquisar" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-paginator [pageSizeOptions]="[5, 10,
+                                        20]" showFirstLastButtons></mat-paginator>
+                        </div>
+                    </div>
+                </form>
+                <mat-table #table [dataSource]="employeeInfoTableDataSource">
 
-            </tbody>
-        </table>
-    </div> -->
+                    <!-- Coluna do ID -->
+                    <ng-container matColumnDef="Id">
+                        <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+                        <mat-cell *matCellDef="let Pagamentos">
+                            <p class="text-truncate font-weight-600"> {{ Pagamentos.Id_Trabalhador }}</p>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- Coluna Nome -->
+                    <ng-container matColumnDef="Nome">
+                        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-lg>Nome</mat-header-cell>
+                        <mat-cell *matCellDef="let Pagamentos" fxHide fxShow.gt-lg>
+                            <p class="job-title text-truncate"> {{ Pagamentos.Trabalhador }}</p>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- Coluna BI -->
+                    <ng-container matColumnDef="B.I">
+                        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-lg>B.I</mat-header-cell>
+                        <mat-cell *matCellDef="let Pagamentos" fxHide fxShow.gt-lg>
+                            <p class="company text-truncate"> {{ Pagamentos.Documento }} </p>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- Coluna Nº Agente -->
+                    <ng-container matColumnDef="NumAgente">
+                        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-lg>Nº. Agente</mat-header-cell>
+                        <mat-cell *matCellDef="let Pagamentos" fxHide fxShow.gt-lg>
+                            <p class="company text-truncate"> {{ Pagamentos.NIF }} </p>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- Coluna Unidade -->
+                    <ng-container matColumnDef="Unidade">
+                        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-lg>Unidade Organica</mat-header-cell>
+                        <mat-cell *matCellDef="let Pagamentos" fxHide fxShow.gt-lg>
+                            {{ Pagamentos.Centro }}
+                            <button *ngIf="Pagamentos.EstadoPagamento
+                                        =='Pago'" class="btn btn-success" disabled>
+                                        {{ Pagamentos.EstadoPagamento }}
+                                    </button>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- Coluna Situação -->
+                    <ng-container matColumnDef="Situacao">
+                        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-lg>Situação</mat-header-cell>
+                        <mat-cell *matCellDef="let Pagamentos" fxHide fxShow.gt-lg>
+                            <p class="company text-truncate"> {{ Pagamentos.SituacaoDescricao }} </p>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- Coluna Ação -->
+                    <ng-container matColumnDef="Accao">
+                        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-lg>Acção</mat-header-cell>
+                        <mat-cell *matCellDef="let detalhedocontracto" fxHide fxShow.gt-lg>
+                            <div fxFlex="row" fxLayoutAlign="end
+                                        center">
+                                <button mat-icon-button color="primary" title="Editar" [disabled]="detalhedocontracto.Situacao
+                                            == '1' ||
+                                            detalhedocontracto.Situacao == '3'" (click)="FormCadastro(detalhedocontracto)">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
+                            </div>
+                        </mat-cell>
+                        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let Pagamentos; columns:
+                                displayedColumns">
+                    </mat-row>
+                </mat-table>
+            </div>
+        </mat-card>
+
+    </div>
 </div>

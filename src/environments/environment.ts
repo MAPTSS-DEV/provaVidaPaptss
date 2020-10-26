@@ -9,6 +9,9 @@ export const environment = {
   URLImage: 'https://172.26.42.19:8863/Image/',
   apiURL: 'https://172.26.42.19:8064/api',
 
+  apiUrl: 'https://172.26.42.19:8064',
+  apiPath: '/api',
+
   EmailUrl: 'https://www.cupplus.co.ao/smsapp/apis/smscontact/',
   _IdEmpresa: ''
 };

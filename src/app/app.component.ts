@@ -1,6 +1,6 @@
-import { AccountService } from '@app/services';
 import { Component } from '@angular/core';
-import { User } from '@app/models';
+import { WebcamImage } from 'ngx-webcam';
+import { AuthGuard } from '@app/helpers';
 
 @Component({
   selector: 'app-root',
@@ -9,17 +9,15 @@ import { User } from '@app/models';
 })
 export class AppComponent {
   title = 'provaVidaPaptss';
-  user: User;
-  constructor(private accountService: AccountService) {
-    this.accountService.user.subscribe(x => this.user = x);
+  mostrarMenu = false;
+  constructor(private AuthG: AuthGuard) {
+    this.AuthG.mostrarMenuEmiter.subscribe(
+      mostrar => this.mostrarMenu = mostrar
+    );
   }
 
-  get isAdmin() {
-    // return this.user && this.user.role === Role.Admin;
-    return true;
-  }
-
-  logout() {
-    this.accountService.logout();
+  public webcamImage: WebcamImage = null;
+  handleImage(webcamImage: WebcamImage) {
+    this.webcamImage = webcamImage;
   }
 }

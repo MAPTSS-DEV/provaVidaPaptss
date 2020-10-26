@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { AccountService, AlertService } from '@app/_services';
+import { AccountService, AlertService } from '@app/services';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 
 @Component({ templateUrl: 'add-edit.component.html' })
@@ -49,17 +49,17 @@ export class AddEditComponent implements OnInit {
         });
 
         if (!this.isAddMode) {
-            this.accountService.getById(this.id)
-                .pipe(first())
-                .subscribe((x:any) => {
-                    this.f.first_name.setValue(x.content.first_name);
-                    this.f.last_name.setValue(x.content.last_name);
-                    this.f.email.setValue(x.content.email);
-                    this.f.active.setValue(x.content.active);
-                    this.f.dob.setValue(x.content.dob);
-                    this.f.genre.setValue(x.content.genre);
-                    this.f.roles.setValue(x.content.roles);
-                });
+            // this.accountService.getById(this.id)
+            //     .pipe(first())
+            //     .subscribe((x:any) => {
+            //         this.f.first_name.setValue(x.content.first_name);
+            //         this.f.last_name.setValue(x.content.last_name);
+            //         this.f.email.setValue(x.content.email);
+            //         this.f.active.setValue(x.content.active);
+            //         this.f.dob.setValue(x.content.dob);
+            //         this.f.genre.setValue(x.content.genre);
+            //         this.f.roles.setValue(x.content.roles);
+            //     });
         }
     }
 
@@ -86,39 +86,39 @@ export class AddEditComponent implements OnInit {
     }
 
     private createUser() {
-        this.accountService.register(this.form.value)
-            .pipe(first())
-            .subscribe(
-                data => {
-                    this.alertService.success('User added successfully', { keepAfterRouteChange: true });
-                    this.router.navigate(['.', { relativeTo: this.route }]);
-                },
-                error => {
-                    this.alertService.error(error);
-                    this.loading = false;
-                });
+        // this.accountService.register(this.form.value)
+        //     .pipe(first())
+        //     .subscribe(
+        //         data => {
+        //             this.alertService.success('User added successfully', { keepAfterRouteChange: true });
+        //             this.router.navigate(['.', { relativeTo: this.route }]);
+        //         },
+        //         error => {
+        //             this.alertService.error(error);
+        //             this.loading = false;
+        //         });
     }
 
     private updateUser() {
-        this.accountService.update(this.id, this.form.value)
-            .pipe(first())
-            .subscribe(
-                data => {
-                    this.alertService.success('Update successful', { keepAfterRouteChange: true });
-                    this.router.navigate(['..', { relativeTo: this.route }]);
-                },
-                error => {
-                    this.alertService.error(error);
-                    this.loading = false;
-                });
+        // this.accountService.update(this.id, this.form.value)
+        //     .pipe(first())
+        //     .subscribe(
+        //         data => {
+        //             this.alertService.success('Update successful', { keepAfterRouteChange: true });
+        //             this.router.navigate(['..', { relativeTo: this.route }]);
+        //         },
+        //         error => {
+        //             this.alertService.error(error);
+        //             this.loading = false;
+        //         });
     }
 
     loadRoles(){
-        this.accountService.roles().subscribe((response: any) => {
-            console.log(' loaded sucessfull', response);
-            this.roles = response.content;
-          }, error => {
-            console.log('Error loading books', error);
-          });
+        // this.accountService.roles().subscribe((response: any) => {
+        //     console.log(' loaded sucessfull', response);
+        //     this.roles = response.content;
+        //   }, error => {
+        //     console.log('Error loading books', error);
+        //   });
     }
 }

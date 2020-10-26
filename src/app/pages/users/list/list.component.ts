@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-import { AccountService } from '@app/_services';
+import { AccountService } from '@app/services';
 
 @Component({ templateUrl: 'list.component.html' })
 export class ListComponent implements OnInit {
@@ -10,12 +10,12 @@ export class ListComponent implements OnInit {
     constructor(private accountService: AccountService) { }
 
     ngOnInit() {
-        this.accountService.getAll().subscribe((response: any) => {
-            console.log('users', response);
-            this.users = response.content;
-        }, error => {
-            console.log('Error loading books', error);
-        });
+        // this.accountService.getAll().subscribe((response: any) => {
+        //     console.log('users', response);
+        //     this.users = response.content;
+        // }, error => {
+        //     console.log('Error loading books', error);
+        // });
         // this.accountService.getAll()
         //     .pipe(first())
         //     .subscribe((users:any) => this.users = users.content);
@@ -24,10 +24,10 @@ export class ListComponent implements OnInit {
     deleteUser(id: string) {
         const user = this.users.find(x => x.id === id);
         user.isDeleting = true;
-        this.accountService.delete(id)
-            .pipe(first())
-            .subscribe(() => {
-                this.users = this.users.filter(x => x.id !== id)
-            });
+        // this.accountService.delete(id)
+        //     .pipe(first())
+        //     .subscribe(() => {
+        //         this.users = this.users.filter(x => x.id !== id)
+        //     });
     }
 }
