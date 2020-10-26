@@ -32,6 +32,8 @@ export class CadastroComponent implements OnInit {
   fileToUpload: File = null;
   vfile;
   selectedTabIndex = 0;
+  hasError = false;
+  fieldError = '';
 
   prov: Provincias[];
   Mun: Municipios[];
@@ -259,13 +261,15 @@ export class CadastroComponent implements OnInit {
   }
 
   // Novos metodos adicionados
-  private validarFormulario(fieldsToValidate: string[]): boolean{
+  private validarFormulario(fieldsToValidate: string[]): boolean {
     var result: boolean = true;
-     fieldsToValidate.forEach(element => {
+    fieldsToValidate.forEach(element => {
       // console.log('Element', element);
       if (this.CadastroForm.get(element).hasError('required')) {
-         console.log('Campo não prienchido', element);
-         result = false;
+        console.log('Campo não prienchido', element);
+        this.hasError = true;
+        this.fieldError = element;
+        result = false;
       }
     });
     return result;
@@ -276,16 +280,17 @@ export class CadastroComponent implements OnInit {
     if (!this.CadastroForm.valid) {
       console.log(this.validarFormulario(FIELDS_FORM_PERSON));
       console.log(this.validarFormulario(FIELDS_FORM_COMPLEMENTARES));
-      
-      if (!this.validarFormulario(FIELDS_FORM_PERSON)){
-        this.selectedTabIndex = 0
-      }else if(!this.validarFormulario(FIELDS_FORM_COMPLEMENTARES)){
+
+      if (!this.validarFormulario(FIELDS_FORM_PERSON)) {
+        this.selectedTabIndex = 0;
+      } else if (!this.validarFormulario(FIELDS_FORM_COMPLEMENTARES)) {
         this.selectedTabIndex = 1
-      }else {
-        this.selectedTabIndex = 3
+      } else {
+        this.selectedTabIndex = 3;
       }
-    }else{
+    } else {
       this.selectedTabIndex = clickedIndex;
+      this.hasError = false;
     }
   }
 

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { WebcamImage } from 'ngx-webcam';
 import { AuthGuard } from '@app/helpers';
+import { AccountService } from '@app/services';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +12,7 @@ import { AuthGuard } from '@app/helpers';
 export class AppComponent {
   title = 'provaVidaPaptss';
   mostrarMenu = false;
-  constructor(private AuthG: AuthGuard) {
+  constructor(private AuthG: AuthGuard, public accountSrvc: AccountService) {
     this.AuthG.mostrarMenuEmiter.subscribe(
       mostrar => this.mostrarMenu = mostrar
     );
@@ -19,5 +21,9 @@ export class AppComponent {
   public webcamImage: WebcamImage = null;
   handleImage(webcamImage: WebcamImage) {
     this.webcamImage = webcamImage;
+  }
+
+  logout() {
+    this.accountSrvc.logout();
   }
 }

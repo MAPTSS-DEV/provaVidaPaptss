@@ -1,12 +1,12 @@
 ﻿<div class="p-4">
-    <div class="container">
+    <div class="container-fluild">
         <h1>
             <mat-icon>account_box</mat-icon>
             Ola {{user}}!
         </h1>
         <p>Bem vindo ao programa de prova de vida do INSS</p>
     </div>
-    <div class="container">
+    <div class="container-fluid">
         <!-- <br> -->
         <!-- <app-sidebar></app-sidebar> -->
         <mat-card>
@@ -41,7 +41,7 @@
                         </div>
                     </div>
                 </form>
-                <mat-table #table [dataSource]="employeeInfoTableDataSource">
+                <mat-table #table class="table" [dataSource]="employeeInfoTableDataSource">
 
                     <!-- Coluna do ID -->
                     <ng-container matColumnDef="Id">

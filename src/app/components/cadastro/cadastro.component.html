@@ -20,6 +20,9 @@
                 </ng-template>
                 <br>
                 <!-- <form name="CadastroForm" [formGroup]="dadosPessoaisForm" novalidate> -->
+                <div *ngIf="hasError" class="alert alert-danger" role="alert">
+                    Erro Campo. O Campo <span *ngIf="fieldError == 'Documento'"> Número do BI</span> <span *ngIf="fieldError != 'Documento'">{{fieldError}}</span> é obrigatório e não foi preenchido.
+                </div>
                 <div class="row">
                     <div class="col-md-12">
                         <br>
@@ -87,10 +90,10 @@
                     <div class="col-md-6">
                         <mat-form-field appearance="outline" class="mr-sm-12" fxFlex>
                             <mat-label>Telefone</mat-label>
-                            <input matInput formControlName="Telefone" maxlength="10" required/>
+                            <input matInput formControlName="Telefone" maxlength="10" />
                             <mat-icon matSuffix class="secondary-text">local_phone</mat-icon>
-                            <mat-error *ngIf="CadastroForm.get('Telefone').hasError('required')">
-                                O Telefone é obrigatório. </mat-error>
+                            <!-- <mat-error *ngIf="CadastroForm.get('Telefone').hasError('required')">
+                                O Telefone é obrigatório. </mat-error> -->
                             <mat-error *ngIf="CadastroForm.get('Telefone').status ===
                                 'PENDING'">validando Telefone... </mat-error>
                             <mat-error *ngIf="CadastroForm.get('Telefone').status ===
@@ -227,6 +230,9 @@
                     Dados Complementares
                 </ng-template>
                 <br>
+                <div *ngIf="hasError" class="alert alert-danger" role="alert">
+                    Erro Campo. O Campo {{fieldError}} é obrigatório e não foi preenchido.
+                </div>
                 <h3><b>Naturalidade</b></h3>
                 <!-- <form name="CadastroForm" [formGroup]="CadastroForm" (ngSubmit)="OnSubmit()" novalidate> -->
                 <div class="row">
@@ -385,6 +391,9 @@
                     Vinculo
                 </ng-template>
                 <br>
+                <div *ngIf="hasError" class="alert alert-danger" role="alert">
+                    Erro Campo. O Campo {{fieldError}} é obrigatório e não foi preenchido.
+                </div>
                 <!-- <form name="CadastroForm" [formGroup]="CadastroForm" (ngSubmit)="OnSubmit()" novalidate> -->
                 <!--  <h3><b>Vinculo</b></h3> -->
                 <div class="row">

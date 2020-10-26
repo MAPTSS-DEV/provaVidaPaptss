@@ -4,8 +4,10 @@
         <!-- <a class="nav-item nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a> -->
         <a class="nav-item nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
         <!-- <a class="nav-item nav-link" routerLink="/admin" *ngIf="isAdmin" routerLinkActive="active">Admin</a>
-        <a class="nav-item nav-link" routerLink="/users" *ngIf="isAdmin" routerLinkActive="active">Users</a>
-        <a class="nav-item nav-link" (click)="logout()">Logout</a> -->
+        <a class="nav-item nav-link" routerLink="/users" *ngIf="isAdmin" routerLinkActive="active">Users</a> -->
+    </div>
+    <div class="navbar-nav  ml-auto">
+        <a class="nav-item nav-link" title="Terminar Sessão" (click)="logout()"><span class="material-icons">exit_to_app</span></a>
     </div>
 </nav>
 

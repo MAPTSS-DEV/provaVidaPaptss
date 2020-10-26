@@ -4,8 +4,9 @@ import { environment } from '@environments/environment';
 import { User } from '@app/models';
 import { FormGroup } from '@angular/forms';
 import { Observable, BehaviorSubject, of, Subject, Subscription } from 'rxjs';
-import { tap, catchError, map, delay } from 'rxjs/operators';
+import { tap, catchError, map, delay, timeout } from 'rxjs/operators';
 import { Role } from '@app/models/role';
+import { Router } from '@angular/router';
 
 const fullUrl = `${environment.apiUrl}${environment.apiPath}`;
 const baseUrl = `${environment.apiUrl}`;
@@ -42,7 +43,7 @@ export class AccountService {
     private UserRole = new BehaviorSubject<string>(localStorage.getItem('role'));
     user: User;
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, public router: Router) { }
 
     // tslint:disable-next-line: typedef
     get isLoggesIn() {
@@ -102,7 +103,9 @@ export class AccountService {
     userAuthentication(formValue) {
         const data = 'username=' + formValue.username + '&password=' + formValue.password + '&grant_type=password';
         const reqHeader = new HttpHeaders({ 'Content-Type': 'application/x-www-urlencoded', 'No-Auth': 'True' });
-        return this.http.post(`${baseUrl}/token`, data, { headers: reqHeader });
+        return this.http.post(`${baseUrl}/token`, data, { headers: reqHeader }).pipe(
+            timeout(13000)
+        );
     }
 
     BuscaUsuarios(): Observable<User[]> {
@@ -319,17 +322,17 @@ export class AccountService {
     }
 
     logout(): void {
-
-        localStorage.removeItem('userToken');
         // this.userService.isLoggesIn(false);
         //  localStorage.setItem('loginStatus', '0');
         //  localStorage.setItem('idEmpresa', '0');
+        localStorage.removeItem('userToken');
         localStorage.removeItem('loginStatus');
         localStorage.removeItem('idEmpresa');
         localStorage.removeItem('user');
         localStorage.removeItem('NomeEmpresa');
         localStorage.removeItem('role');
         localStorage.removeItem('id');
+        this.router.navigateByUrl('/account/login');
 
     }
 
