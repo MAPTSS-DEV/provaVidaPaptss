@@ -6,7 +6,10 @@ import { first } from 'rxjs/operators';
 import { AccountService, AlertService } from '@app/services';
 import Swal from 'sweetalert2';
 
-@Component({ templateUrl: 'login.component.html' })
+@Component({
+    templateUrl: 'login.component.html',
+    styleUrls: ['./login.component.scss']
+})
 export class LoginComponent implements OnInit {
     form: FormGroup;
     loading = false;
@@ -56,7 +59,7 @@ export class LoginComponent implements OnInit {
             this.loading = false;
             this.router.navigate(['/home']);
             console.log('Passou');
-            
+
         }, (err) => {
             console.log('Ocorreu um erro ao fazer login', err);
             this.loading = false;
