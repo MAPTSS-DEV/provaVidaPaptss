@@ -241,8 +241,7 @@
                             <mat-label>Nacionalidade</mat-label>
                             <mat-select name="Id_Nacionalidade" formControlName="Id_Nacionalidade" required>
                                 <mat-option>-seleccione-</mat-option>
-                                <mat-option *ngFor="let n of nacionalidade |
-                                    async" [value]="n.Id_Pais">
+                                <mat-option *ngFor="let n of nacionalidade" [value]="n.Id_Pais">
                                     {{n.Pais}}
                                 </mat-option>
                             </mat-select>
@@ -257,7 +256,7 @@
                                 <mat-option>-seleccione-</mat-option>
                                 <mat-option *ngFor="let n of prov" [value]="n.Id_Provincia">
                                     {{n.Provincia}}
-                                </mat-option> -->
+                                </mat-option>
                             </mat-select>
                             <mat-error *ngIf="CadastroForm.get('Id_Provincia').hasError('required')">
                                 Provincia é obrigatório. </mat-error>
@@ -322,7 +321,7 @@
                             <mat-label>Província</mat-label>
                             <mat-select name="Id_ProvinciaMorada" formControlName="Id_ProvinciaMorada" required>
                                 <mat-option>-seleccione-</mat-option>
-                                <mat-option *ngFor="let n of prov" [value]="n.Id_Provincia">
+                                <mat-option *ngFor="let n of provMorada" [value]="n.Id_Provincia">
                                     {{n.Provincia}}
                                 </mat-option> -->
                             </mat-select>

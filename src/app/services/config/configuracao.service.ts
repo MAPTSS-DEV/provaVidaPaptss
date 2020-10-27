@@ -105,11 +105,11 @@ export class ConfiguracaoService {
 
   // tslint:disable-next-line: typedef
   BuscaMunicipioPorIdProvincia(id) {
-    return  this.http.get<Municipios[]>(fullUrl + '/Municipios/' + id )
+    return id ?  this.http.get<Municipios[]>(fullUrl + '/Municipios/' + id )
     .pipe(
      // map((municipios: Municipios[]) => municipios.filter(c => c.Id_Provincia = id))
       catchError(this.handleError('getPessoas', []))
-    );
+    ) : new Observable<Municipios[]>();
   }
   BuscaSituacaoMotivo(id) {
     return  this.http.get<SituacaoMotivo[]>(fullUrl + '/SituacaoMotivo/' + id )
@@ -177,6 +177,7 @@ getData() {
            catchError(this.handleError('Regime', []))
     );
   }
+
   ListaEspecialidade(): Observable<Especialidade[]> {
     return this.http.get<Especialidade[]>(fullUrl + '/Especialidades').pipe(
       tap(heroes => console.log('Especialidades carregado com sucesso')),
@@ -218,6 +219,15 @@ getData() {
     );
   }
 
+  // tslint:disable-next-line: typedef
+  ListaProvinciaFromPais(id) {
+    return  this.http.get<Provincias[]>(fullUrl + '/Provincias')
+    .pipe(
+     map((provincias: Provincias[]) => provincias.filter(c => c.Id_Pais === id)),
+   //  tap(console.log),
+      catchError(this.handleError('getPessoas', []))
+    );
+  }
   // tslint:disable-next-line: typedef
   ListaMunicipio(id) {
 

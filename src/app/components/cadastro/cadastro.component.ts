@@ -35,14 +35,16 @@ export class CadastroComponent implements OnInit {
   hasError = false;
   fieldError = '';
 
+  // Pais : Pais;
   prov: Provincias[];
+  provMorada: Provincias[];
   Mun: Municipios[];
   MunMorada: Municipios[];
   Comun: Comuna[];
   distrito: Distrito[];
   ComuMorada: Comuna[];
   distritoMorada: Distrito[];
-  nacionalidade: Observable<Pais[]>;
+  nacionalidade: Pais[];
   nivelAcademico: Observable<NivelAcademico[]>;
   tipoVinculo: Observable<TipoVinculo[]>;
   regime: Observable<Regime[]>;
@@ -122,8 +124,10 @@ export class CadastroComponent implements OnInit {
       Id_Usuario: [localStorage.getItem('id'), Validators.required]
     });
 
-    this.config.ListaProvincia().subscribe(res => this.prov = res);
-    this.nacionalidade = this.config.ListaNacionalidade();
+    // Id_Pais
+    this.config.ListaProvincia().subscribe(res => this.provMorada = res);
+    this.config.ListaNacionalidade().subscribe(res => this.nacionalidade = res);
+    // this.nacionalidade = this.config.ListaNacionalidade();
     this.nivelAcademico = this.config.ListaNivelAcademico();
     this.tipoVinculo = this.config.ListaTipoVinculo();
     this.regime = this.config.ListaRegime();
@@ -152,8 +156,15 @@ export class CadastroComponent implements OnInit {
     });
     //   this.imageUrl = 'data:image/jpeg;base64,' + this.DadosPessoais[0].Foto;
 
+    // =======================================================================
+    this.config.ListaProvinciaFromPais(this.CadastroForm.controls.Id_Nacionalidade.value)
+      .subscribe(P => this.prov = P);
+    this.CadastroForm.get('Id_Nacionalidade').valueChanges.subscribe(data => {
+      this.config.ListaProvinciaFromPais(data).subscribe(P => {
+        this.prov = P;
+      });
+    });
 
-    // this.trabalhadorForm.controls['Salario'].
     // =======================================================================
     this.config.ListaMunicipio(this.CadastroForm.controls.Id_Provincia.value)
       .subscribe(M => this.Mun = M);
@@ -302,7 +313,6 @@ export class CadastroComponent implements OnInit {
     this.config.BuscaFoto(this.CadastroForm.controls.Id_Trabalhador.value)
       .subscribe(M => {
         //  console.log(M);
-
         this.imageUrl = 'data:image/jpeg;base64,' + M[0].Foto;
       });
     this.CadastroForm.get('Id_Trabalhador').valueChanges.subscribe(data => {
@@ -367,10 +377,10 @@ export class CadastroComponent implements OnInit {
     }
 
   }
+
   validateAllFormFields(formGroup: FormGroup) {
     // {1}
     Object.keys(formGroup.controls).forEach(field => {
-
       const control = formGroup.get(field); // {3}
       if (control instanceof FormControl) {
         // {4}

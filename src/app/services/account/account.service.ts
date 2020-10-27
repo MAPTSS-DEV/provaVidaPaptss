@@ -103,7 +103,8 @@ export class AccountService {
     userAuthentication(formValue) {
         const data = 'username=' + formValue.username + '&password=' + formValue.password + '&grant_type=password';
         const reqHeader = new HttpHeaders({ 'Content-Type': 'application/x-www-urlencoded', 'No-Auth': 'True' });
-        return this.http.post(`${baseUrl}/token`, data, { headers: reqHeader }).pipe(
+        return this.http.post(`${baseUrl}/token`, data, { headers: reqHeader })
+        .pipe(
             timeout(13000)
         );
     }
