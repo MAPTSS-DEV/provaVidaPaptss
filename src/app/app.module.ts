@@ -27,6 +27,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { CadastroComponent } from '@app/components';
 import { CameraComponent } from './components/camera/camera.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { CameraComponent } from './components/camera/camera.component';
     MatCardModule,
     MatPaginatorModule,
     MatButtonModule,
+    NgxSpinnerModule,
   ],
   exports: [MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule ], // and the exports
   providers: [

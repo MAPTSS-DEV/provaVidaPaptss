@@ -3,5 +3,5 @@ export class Provincias {
     Id_Provincia: number;
     Id_Pais: number;
     Provincia: string;
-    Situacao: string;
+    Situacao?: string;
   }

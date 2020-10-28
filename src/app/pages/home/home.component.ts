@@ -10,6 +10,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { FilesDataSource } from '@app/helpers/datasource';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-home',
@@ -59,6 +60,7 @@ export class HomeComponent implements OnInit {
         private _PagamentosService: GeraisService,
         public servico: CadastroService,
         public matDialogRef: MatDialogRef<CadastroComponent>,
+        private spinner: NgxSpinnerService,
         // tslint:disable-next-line: variable-name
         @Inject(MAT_DIALOG_DATA) public _data: any
     ) {
@@ -69,12 +71,17 @@ export class HomeComponent implements OnInit {
     // tslint:disable-next-line: typedef
     ngOnInit() {
 
+        /** spinner starts on init */
+        this.spinner.show();
         this.user = localStorage.getItem('user');
         this._PagamentosService.BuscaPagamentos().subscribe(response => {
             this.employeeInfoTable = response;
             // console.log(response);
             this.employeeInfoTableDataSource.data = this.employeeInfoTable;
             this.employeeInfoTableDataSource.paginator = this.paginator;
+            this.spinner.hide();
+        }, err => {
+            this.spinner.hide();
         });
 
         if (this.servico.subsVar === undefined) {
@@ -108,13 +115,13 @@ export class HomeComponent implements OnInit {
     FormCadastro(trab): void {
         //    console.log(trab);
         this.matDialogRef = this._matDialog.open(CadastroComponent, {
-            width: '990px',
-            height: '700px',
+            width: '790px',
+            height: '800px',
             data: {
                 trabalhador: trab,
                 action: 'edit'
             },
-            disableClose: true 
+            disableClose: true
         });
 
 

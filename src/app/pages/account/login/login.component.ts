@@ -1,4 +1,5 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { NgxSpinnerService } from 'ngx-spinner';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private accountService: AccountService,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private spinner: NgxSpinnerService
     ) { }
 
     ngOnInit() {
@@ -49,6 +51,7 @@ export class LoginComponent implements OnInit {
         }
 
         this.loading = true;
+        this.spinner.show();
         this.accountService.userAuthentication(this.form.value).subscribe((response: any) => {
             console.log('Response after login', response);
             localStorage.setItem('userToken', response.access_token);
@@ -57,12 +60,14 @@ export class LoginComponent implements OnInit {
             localStorage.setItem('id', response.IdUsuario);
             localStorage.setItem('loginStatus', '1');
             this.loading = false;
+            this.spinner.hide();
             this.router.navigate(['/home']);
             console.log('Passou');
 
         }, (err) => {
             console.log('Ocorreu um erro ao fazer login', err);
             this.loading = false;
+            this.spinner.hide();
             Swal.fire({
                 position: 'center',
                 icon: "error",

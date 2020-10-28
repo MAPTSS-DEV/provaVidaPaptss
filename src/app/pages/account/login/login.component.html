@@ -1,4 +1,7 @@
-﻿<div class="card">
+﻿<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#ffffff" type="fire" [fullScreen]="true">
+    <p style="color: white"> A processar aguarde... </p>
+</ngx-spinner>
+<div class="card">
     <h4 class="card-header">Login</h4>
     <div class="card-body">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">

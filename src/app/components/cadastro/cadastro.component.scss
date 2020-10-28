@@ -1,5 +1,6 @@
 mat-form-field {
     width: 100%;
+    font-size: 12px;
 }
 
 button {
@@ -22,4 +23,19 @@ button {
 
 .element-spacer {
     flex: 1 1 auto;
+}
+
+mat-label {
+    font-weight: bold;
+    color: black;
+}
+
+.btn-camera {
+    margin-top: -3em;
+    margin-left: 7em;
+}
+
+.btn-camera-trigger {
+    box-shadow: 0px 0px 2px black;
+    border: #00000082 1px solid;
 }

@@ -1,3 +1,4 @@
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CadastroService, CameraService } from '@app/services';
@@ -16,20 +17,6 @@ import { BrowserModule } from '@angular/platform-browser';
 export class CameraComponent implements OnInit {
 
   idTrabalhador;
-  constructor(
-    // tslint:disable-next-line: variable-name
-    public _matDialog: MatDialog,
-    public cameraservico: CameraService,
-    public servico: CadastroService,
-    public matDialogRef: MatDialogRef<CadastroComponent>,
-    // tslint:disable-next-line: variable-name
-    @Inject(MAT_DIALOG_DATA) public _data: any,
-    public cameraDialogRef: MatDialogRef<CameraComponent>) {
-    console.log(_data.trabalhador);
-    this.idTrabalhador = _data.trabalhador;
-    //    this.CadastroForm.patchValue( _data.trabalhador[0]);
-  }
-
   public showWebcam = true;
   public allowCameraSwitch = true;
   public multipleWebcamsAvailable = false;
@@ -50,6 +37,21 @@ export class CameraComponent implements OnInit {
   private trigger: Subject<void> = new Subject<void>();
   // switch to next / previous / specific webcam; true/false: forward/backwards, string: deviceId
   private nextWebcam: Subject<boolean | string> = new Subject<boolean | string>();
+
+  constructor(
+    // tslint:disable-next-line: variable-name
+    public _matDialog: MatDialog,
+    public cameraservico: CameraService,
+    public servico: CadastroService,
+    public matDialogRef: MatDialogRef<CadastroComponent>,
+    private spinner: NgxSpinnerService,
+    // tslint:disable-next-line: variable-name
+    @Inject(MAT_DIALOG_DATA) public _data: any,
+    public cameraDialogRef: MatDialogRef<CameraComponent>) {
+    console.log(_data.trabalhador);
+    this.idTrabalhador = _data.trabalhador;
+    //    this.CadastroForm.patchValue( _data.trabalhador[0]);
+  }
 
   public ngOnInit(): void {
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
@@ -112,16 +114,14 @@ export class CameraComponent implements OnInit {
   OnSubmit(): void {
     //  console.log(this.PessoaForm);
     //  if (this.PessoaForm.valid) {
+    this.spinner.show();
     const formData: FormData = new FormData();
     console.log(this.imageFile);
     formData.append('Image', this.imageFile, this.imageFile.name);
     formData.append('Id_Trabalhador', this.idTrabalhador);
     this.cameraservico.Actualiza(formData).subscribe(res => {
-      //   this.servico.EmitirEvento.emit();
-      console.log(formData);
-      // this.configService.showAlert('Solicitação feita com sucesso', 'alert-success' , true);
-      // this.reset();
-      // this.message.openInfoModal('Atualização feita com sucesso');
+      // console.log(formData);
+      this.spinner.hide();
       Swal.fire({
         position: 'center',
         icon: 'success',
@@ -129,15 +129,18 @@ export class CameraComponent implements OnInit {
         showConfirmButton: false,
         timer: 3500
       });
-      // this.close();
-      //  this.servico.EmitirEvento.emit();
       this.cameraservico.EmitirFotoEvento.emit();
-      // this.solicitacao = this.service.getSolicitacao();
       this.dismissModal();
-    }
-      ,
-      err => {
+    },err => {
         console.log(err);
+        this.spinner.hide();
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Ocorreu um erro ao tentar atualizar a fotografia',
+          showConfirmButton: false,
+          timer: 3500
+        });
         //   this.message.openErrorModal('Ocorreu um erro ao enviar a solicitação, por favor contacte o administrador do sistema');
       });
     // }

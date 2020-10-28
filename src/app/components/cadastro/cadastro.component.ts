@@ -8,6 +8,7 @@ import { Observable, Observer } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { CameraComponent } from '..';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-cadastro',
@@ -45,15 +46,15 @@ export class CadastroComponent implements OnInit {
   ComuMorada: Comuna[];
   distritoMorada: Distrito[];
   nacionalidade: Pais[];
-  nivelAcademico: Observable<NivelAcademico[]>;
-  tipoVinculo: Observable<TipoVinculo[]>;
-  regime: Observable<Regime[]>;
+  nivelAcademico: NivelAcademico[];
+  tipoVinculo: TipoVinculo[];
+  regime: Regime[];
   carreira: Carreira[];
   categoria: Categoria[];
-  sexo: Observable<Sexo[]>;
-  estadocivil: Observable<EstadoCivil[]>;
-  centro: Observable<Centro[]>;
-  situacao: Observable<SituacaoCadastro[]>;
+  sexo: Sexo[];
+  estadocivil: EstadoCivil[];
+  centro: Centro[];
+  situacao: SituacaoCadastro[];
   Motivo: SituacaoMotivo[];
   videoWidth = 0;
   videoHeight = 0;
@@ -69,6 +70,7 @@ export class CadastroComponent implements OnInit {
     public _matDialog: MatDialog,
     public cameraDialogRef: MatDialogRef<CameraComponent>,
     public cadastroDialogRef: MatDialogRef<CadastroComponent>,
+    private spinner: NgxSpinnerService,
     // tslint:disable-next-line: variable-name
     @Inject(MAT_DIALOG_DATA) public _data: any) {
     //   console.log(_data.trabalhador);
@@ -125,9 +127,8 @@ export class CadastroComponent implements OnInit {
     });
 
     // Id_Pais
-    this.config.ListaProvincia().subscribe(res => this.provMorada = res);
-    this.config.ListaNacionalidade().subscribe(res => this.nacionalidade = res);
-    // this.nacionalidade = this.config.ListaNacionalidade();
+    this.nacionalidade = this.config.ListaNacionalidade();
+    this.provMorada = this.config.ListaProvincia();
     this.nivelAcademico = this.config.ListaNivelAcademico();
     this.tipoVinculo = this.config.ListaTipoVinculo();
     this.regime = this.config.ListaRegime();
@@ -135,18 +136,13 @@ export class CadastroComponent implements OnInit {
     this.estadocivil = this.config.EstadoCivil();
     this.situacao = this.config.ListaSituacaoCadastro();
 
-    this.centro = this.config.Centros();
+    this.centro = this.config.ListarCentros();
 
     // console.log(this.cadastro);
     // ========================================================================
     this.CadastroForm.patchValue(this.cadastro);
 
-    this.config.BuscaFoto(this.CadastroForm.controls.Id_Trabalhador.value)
-      .subscribe(M => {
-        //  console.log(M);
-        this.imageUrl = 'data:image/jpeg;base64,' + M[0].Foto;
-        // this.CadastroForm.controls.Foto.setValue('Florindo');
-      });
+    this.atualisarFotografia();
 
     this.CadastroForm.get('Id_Trabalhador').valueChanges.subscribe(data => {
       this.config.BuscaFoto(data).subscribe(M => {
@@ -157,108 +153,148 @@ export class CadastroComponent implements OnInit {
     //   this.imageUrl = 'data:image/jpeg;base64,' + this.DadosPessoais[0].Foto;
 
     // =======================================================================
-    this.config.ListaProvinciaFromPais(this.CadastroForm.controls.Id_Nacionalidade.value)
-      .subscribe(P => this.prov = P);
+    this.prov = this.config.ListaProvincia().filter((item) => {
+      return item.Id_Pais === Number(this.CadastroForm.controls.Id_Nacionalidade.value);
+    });
+
     this.CadastroForm.get('Id_Nacionalidade').valueChanges.subscribe(data => {
-      this.config.ListaProvinciaFromPais(data).subscribe(P => {
-        this.prov = P;
+      this.prov = this.config.ListaProvincia().filter((item) => {
+        return item.Id_Pais === Number(data);
       });
     });
 
     // =======================================================================
-    this.config.ListaMunicipio(this.CadastroForm.controls.Id_Provincia.value)
-      .subscribe(M => this.Mun = M);
+
+    this.Mun = this.config.getMunicipio().filter((item) => {
+      return item.Id_Provincia === Number(this.CadastroForm.controls.Id_Provincia.value);
+    });
     this.CadastroForm.get('Id_Provincia').valueChanges.subscribe(data => {
-      this.config.ListaMunicipio(data).subscribe(M => this.Mun = M);
-    });
-    // =======================================================================
-    this.config.BuscaSituacaoMotivo(this.CadastroForm.controls.Situacao.value)
-      .subscribe(M => {
-        // console.log(this.cadastro[0].Id_ProvinciaMorada);
-        this.Motivo = M;
+      this.Mun = this.config.getMunicipio().filter((item) => {
+        return item.Id_Provincia === Number(data);
       });
-    this.CadastroForm.get('Situacao').valueChanges.subscribe(data => {
-      this.config.BuscaSituacaoMotivo(data).subscribe(M => this.Motivo = M);
     });
 
     // =======================================================================
-    this.config.BuscaMunicipioPorIdProvincia(this.CadastroForm.controls.Id_ProvinciaMorada.value)
-      .subscribe(M => { this.MunMorada = M; });
-    this.CadastroForm.get('Id_ProvinciaMorada').valueChanges.subscribe(data => {
-      //  console.log(data);
-      this.config.BuscaMunicipioPorIdProvincia(data).subscribe(M => this.MunMorada = M);
+
+    this.Comun = this.config.getComuna().filter((item) => {
+      return item.Id_Municipio === Number(this.CadastroForm.controls.Id_Municipio.value);
+    });
+
+    this.CadastroForm.get('Id_Municipio').valueChanges.subscribe(data => {
+      console.log('atualizar comuna');
+      this.Comun = this.config.getComuna().filter((item) => {
+        return item.Id_Municipio === Number(data);
+      });
     });
     // =======================================================================
-    this.config.ListaCarreira(this.CadastroForm.controls.Id_Regime.value)
-      .subscribe(M => this.carreira = M);
+
+    this.Motivo = this.config.getSituacaoMotivo().filter((item) => {
+      return item.Codigo === Number(this.CadastroForm.controls.Situacao.value);
+    });
+
+    this.CadastroForm.get('Situacao').valueChanges.subscribe(data => {
+      this.Motivo = this.config.getSituacaoMotivo().filter((item) => {
+        return item.Codigo === Number(data);
+      });
+    });
+    // =======================================================================
+
+    this.MunMorada = this.config.getMunicipio().filter((item) => {
+      return item.Id_Provincia === Number(this.CadastroForm.controls.Id_ProvinciaMorada.value);
+    });
+
+    this.CadastroForm.get('Id_ProvinciaMorada').valueChanges.subscribe(data => {
+      this.MunMorada = this.config.getMunicipio().filter((item) => {
+        return item.Id_Provincia === Number(data);
+      });
+    });
+    // =======================================================================
+
+    this.carreira = this.config.getCarreira().filter((item) => {
+      return item.Id_Regime === Number(this.CadastroForm.controls.Id_Regime.value);
+    });
 
     this.CadastroForm.get('Id_Regime').valueChanges.subscribe(data => {
-      //  console.log(data);
-      this.config.ListaCarreira(data).subscribe(M => this.carreira = M);
+      this.carreira = this.config.getCarreira().filter((item) => {
+        return item.Id_Regime === Number(data);
+      });
     });
+
     // =======================================================================
 
-    this.config.ListaCategoria(this.CadastroForm.controls.Id_Carreira.value)
-      .subscribe(M => this.categoria = M);
+    this.categoria = this.config.getCategoria().filter((item) => {
+      return item.Id_Carreira === Number(this.CadastroForm.controls.Id_Carreira.value);
+    });
+
     this.CadastroForm.get('Id_Carreira').valueChanges.subscribe(data => {
-      this.config.ListaCategoria(data).subscribe(M => this.categoria = M);
+      this.categoria = this.config.getCategoria().filter((item) => {
+        return item.Id_Carreira === Number(data);
+      });
     });
+
     // =======================================================================
 
-    this.config.ListaComuna(this.CadastroForm.controls.Id_Municipio.value)
-      .subscribe(M => this.Comun = M);
-    this.CadastroForm.get('Id_Municipio').valueChanges.subscribe(data => {
-      this.config.ListaComuna(data).subscribe(M => this.Comun = M);
+    this.distrito = this.config.getDistrito().filter((item) => {
+      return item.Id_Comuna === Number(this.CadastroForm.controls.Id_Comuna.value);
     });
-    // =======================================================================
 
-    this.config.ListaDistrito(this.CadastroForm.controls.Id_Comuna.value)
-      .subscribe(M => this.distrito = M);
     this.CadastroForm.get('Id_Comuna').valueChanges.subscribe(data => {
-      this.config.ListaDistrito(data).subscribe(M => this.distrito = M);
+      this.distrito = this.config.getDistrito().filter((item) => {
+        return item.Id_Comuna === Number(data);
+      });
     });
+
     // =======================================================================
 
-    this.config.Comuna(this.CadastroForm.controls.Id_MunicipioMorada.value)
-      .subscribe(M => this.ComuMorada = M);
+    this.ComuMorada = this.config.getComuna().filter((item) => {
+      return item.Id_Municipio === Number(this.CadastroForm.controls.Id_MunicipioMorada.value);
+    });
+
     this.CadastroForm.get('Id_MunicipioMorada').valueChanges.subscribe(data => {
-      this.config.Comuna(data).subscribe(M => this.ComuMorada = M);
+      this.ComuMorada = this.config.getComuna().filter((item) => {
+        return item.Id_Municipio === Number(data);
+      });
     });
+
     // =======================================================================
 
-    this.config.Distrito(this.CadastroForm.controls.Id_ComunaMorada.value)
-      .subscribe(M => this.distritoMorada = M);
+    this.distritoMorada = this.config.getDistrito().filter((item) => {
+      return item.Id_Comuna === Number(this.CadastroForm.controls.Id_ComunaMorada.value);
+    });
+
     this.CadastroForm.get('Id_ComunaMorada').valueChanges.subscribe(data => {
-      this.config.Distrito(data).subscribe(M => this.distritoMorada = M);
+      this.distritoMorada = this.config.getDistrito().filter((item) => {
+        return item.Id_Comuna === Number(data);
+      });
     });
+
     // =======================================================================
 
-    this.CadastroForm.get('Id_Provincia').valueChanges
-      .pipe(
-        // tap(estado => console.log('Novo estado: ', estado)),
-        map((estado) => this.prov.filter(e => e.Id_Provincia === estado)),
-        map(estados => estados && estados.length > 0 ? estados[0].Id_Provincia : null),
-        switchMap((estadoId: number) => this.config.ListaMunicipio(estadoId))
-        , tap(console.log)
-      )
-      .subscribe(M => this.Mun = M);
+    // this.CadastroForm.get('Id_Provincia').valueChanges
+    //   .pipe(
+    //     // tap(estado => console.log('Novo estado: ', estado)),
+    //     map((estado) => this.prov.filter(e => e.Id_Provincia === estado)),
+    //     map(estados => estados && estados.length > 0 ? estados[0].Id_Provincia : null),
+    //     switchMap((estadoId: number) => this.config.ListaMunicipio(estadoId))
+    //     , tap(console.log)
+    //   )
+    //   .subscribe(M => this.Mun = M);
 
 
-    this.CadastroForm.get('Id_ProvinciaMorada').valueChanges
-      .pipe(
-        // tap(estado => console.log('Novo estado: ', estado)),
-        map((prov) => this.prov.filter(e => e.Id_Provincia === prov)),
-        map(prov => prov && prov.length > 0 ? prov[0].Id_Provincia : null),
-        switchMap((provId: number) => this.config.BuscaMunicipioPorIdProvincia(provId))
-        //  tap(console.log)
-      )
-      .subscribe(M => this.MunMorada = M);
+    // this.CadastroForm.get('Id_ProvinciaMorada').valueChanges
+    //   .pipe(
+    //     // tap(estado => console.log('Novo estado: ', estado)),
+    //     map((prov) => this.prov.filter(e => e.Id_Provincia === prov)),
+    //     map(prov => prov && prov.length > 0 ? prov[0].Id_Provincia : null),
+    //     switchMap((provId: number) => this.config.ListaMunicipio(provId))
+    //     //  tap(console.log)
+    //   )
+    //   .subscribe(M => this.MunMorada = M);
 
     if (this.service.subsVar === undefined) {
       this.service.subsVar = this.service.
         EmitirEvento.subscribe((res) => {
           this.onRefresh();
-
         });
     }
 
@@ -266,12 +302,21 @@ export class CadastroComponent implements OnInit {
       this.cameraservico.subsVar = this.cameraservico.
         EmitirFotoEvento.subscribe((res) => {
           this.onRefresh();
-
         });
     }
   }
 
   // Novos metodos adicionados
+
+  private atualisarFotografia() {
+    this.config.BuscaFoto(this.CadastroForm.controls.Id_Trabalhador.value)
+      .subscribe(M => {
+        //  console.log(M);
+        this.imageUrl = 'data:image/jpeg;base64,' + M[0].Foto;
+        // this.CadastroForm.controls.Foto.setValue('Florindo');
+      });
+  }
+
   private validarFormulario(fieldsToValidate: string[]): boolean {
     var result: boolean = true;
     fieldsToValidate.forEach(element => {
@@ -351,9 +396,11 @@ export class CadastroComponent implements OnInit {
   OnSubmit() {
     //   console.log(this.CadastroForm.value);
     if (this.CadastroForm.valid) {
+      this.spinner.show();
       this.service.GravaTrabalhador(this.CadastroForm.value).subscribe(res => {
         // console.log(res);
         this.service.EmitirEvento.emit();
+        this.spinner.hide();
         Swal.fire({
           position: 'center',
           icon: 'success',
@@ -364,6 +411,14 @@ export class CadastroComponent implements OnInit {
         this.dismiss();
       }, err => {
         console.log('Erro ao Salvar candidato', err);
+        this.spinner.hide();
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: `Occorreu um erro ao Atualizar o Candidato ${this.CadastroForm.value.Trabalhador}.`,
+          showConfirmButton: false,
+          timer: 3500
+        });
       }
       );
 
@@ -441,9 +496,9 @@ export class CadastroComponent implements OnInit {
     this.cameraDialogRef.afterClosed()
       .subscribe(response => {
         if (!response) {
+          this.atualisarFotografia();
           return;
         }
-
       });
   }
 

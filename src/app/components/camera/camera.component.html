@@ -1,3 +1,6 @@
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#ffffff" type="fire" [fullScreen]="true">
+    <p style="color: white"> A processar aguarde... </p>
+</ngx-spinner>
 <div style="text-align:center">
     <!--   <h1>
     Capturar Foto
@@ -11,7 +14,7 @@
                 </div>
                 <br/>
                 <button class="actionBtn btn btn-success btn-sm" (click)="OnSubmit()">Gravar Foto</button>
-                <button class="actionBtn btn btn-primary btn-sm" (click)="getNewPic();">Capturar Nova Foto</button>
+                <button class="actionBtn btn btn-primary btn-sm" (click)="getNewPic();">Nova Foto</button>
             </div>
         </ng-container>
         <ng-container *ngIf="!webcamImage">

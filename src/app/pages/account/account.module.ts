@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -18,6 +18,7 @@ import { RegisterComponent } from './register/register.component';
         LayoutComponent,
         LoginComponent,
         RegisterComponent
-    ]
+    ],
+    schemas:  [ CUSTOM_ELEMENTS_SCHEMA ],
 })
 export class AccountModule { }

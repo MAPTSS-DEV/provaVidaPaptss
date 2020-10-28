@@ -3,7 +3,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { environment } from '@environments/environment';
 import { Observable, of, Subscription } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, timeout } from 'rxjs/operators';
 
 const fullUrl = `${environment.apiUrl}${environment.apiPath}`;
 const baseUrl = `${environment.apiUrl}`;
@@ -31,7 +31,9 @@ export class CadastroService {
     //  console.log(user);
      //  const reqHeader = new HttpHeaders({'No-Auth': 'True'});
      //  const reqHeader = new HttpHeaders({ 'Content-Type': 'application/x-www-urlencoded', 'No-Auth': 'True' });
-      return this.http.post(fullUrl  + '/ActualizarCadastro/', Trab );
+      return this.http.post(fullUrl  + '/ActualizarCadastro/', Trab ).pipe(
+        timeout(30000)
+      );
     }
 
     ApagaFoto(id): Observable<any[]> {
