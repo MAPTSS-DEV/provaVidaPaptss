@@ -578,15 +578,15 @@
                     </div>
 
                     <div class="col-md-6">
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline"  >
                             <mat-label>Motivo</mat-label>
-                            <mat-select name="SituacaoMotivo" formControlName="Motivo" required>
+                            <mat-select name="Motivo" formControlName="Motivo"required [disabled]="motivoEstado">
                                 <mat-option>-seleccione-</mat-option>
                                 <mat-option *ngFor="let n of Motivo" [value]="n.Id_Motivo">
                                     {{n.Motivo}}
                                 </mat-option>
                             </mat-select>
-                            <mat-error *ngIf="CadastroForm.get('Id_Categoria').hasError('required')">
+                            <mat-error *ngIf="CadastroForm.get('Motivo').hasError('required')">
                                 Motivo é obrigatório. </mat-error>
                         </mat-form-field>
                     </div>
