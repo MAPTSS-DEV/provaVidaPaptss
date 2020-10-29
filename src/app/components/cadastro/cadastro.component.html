@@ -173,7 +173,7 @@
                                     <mat-label>Local de Emissão</mat-label>
                                     <mat-select name="LocalEmissao" formControlName="LocalEmissao" required>
                                         <mat-option>-seleccione-</mat-option>
-                                        <mat-option *ngFor="let n of prov" [value]="n.Id_Provincia">
+                                        <mat-option *ngFor="let n of provMorada" [value]="n.Id_Provincia">
                                             {{n.Provincia}}
                                         </mat-option> -->
                                     </mat-select>
