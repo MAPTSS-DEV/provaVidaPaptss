@@ -318,7 +318,7 @@
                                         </mat-option>
                                     </mat-select>
                                     <mat-error *ngIf="CadastroForm.get('Id_Comuna').hasError('required')">
-                                        Nacionalidade é obrigatório. </mat-error>
+                                        Comuna é obrigatória. </mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -333,7 +333,7 @@
                                         </mat-option>
                                     </mat-select>
                                     <mat-error *ngIf="CadastroForm.get('Id_Distrito').hasError('required')">
-                                        Nacionalidade é obrigatório. </mat-error>
+                                        Distrito é obrigatório. </mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -342,6 +342,9 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Bairro</mat-label>
                                     <input matInput formControlName="Bairro" style="width: 100%;" required/>
+                                    <mat-error *ngIf="CadastroForm.get('Bairro').hasError('required')">
+                                        Bairro é obrigatório.
+                                    </mat-error>
                                     <!--  <mat-icon matSuffix class="secondary-text">work</mat-icon> -->
                                     <!--  <mat-error *ngIf="CadastroForm.get('Bairro').hasError('required')" > Número da Segurança social do Trabalhador é obrigatório. </mat-error> -->
                                     <!--  <mat-error *ngIf="CadastroForm.get('Trabalhador').hasError('pattern')" > números não são permitido neste campo. </mat-error> -->
@@ -392,7 +395,7 @@
                                         </mat-option>
                                     </mat-select>
                                     <mat-error *ngIf="CadastroForm.get('Id_ComunaMorada').hasError('required')">
-                                        Nacionalidade é obrigatório. </mat-error>
+                                        Comuna é obrigatória. </mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -407,7 +410,7 @@
                                         </mat-option>
                                     </mat-select>
                                     <mat-error *ngIf="CadastroForm.get('Id_DistritoMorada').hasError('required')">
-                                        Nacionalidade é obrigatório. </mat-error>
+                                        Distrito é obrigatório. </mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -416,6 +419,8 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Bairro</mat-label>
                                     <input matInput formControlName="BairroMorada" style="width: 100%;" required/>
+                                    <mat-error *ngIf="CadastroForm.get('BairroMorada').hasError('required')">
+                                        Bairro é obrigatório. </mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -424,6 +429,8 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Residencia</mat-label>
                                     <input matInput formControlName="Residencia" style="width: 100%;" required/>
+                                    <mat-error *ngIf="CadastroForm.get('Residencia').hasError('required')">
+                                        Residencia é obrigatório. </mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -455,7 +462,7 @@
                                 </mat-option>
                             </mat-select>
                             <mat-error *ngIf="CadastroForm.get('Id_Centro').hasError('required')">
-                                Provincia é obrigatório. </mat-error>
+                                Unidade Organica é obrigatória. </mat-error>
                         </mat-form-field>
                     </div>
 
@@ -483,7 +490,7 @@
                                 </mat-option>
                             </mat-select>
                             <mat-error *ngIf="CadastroForm.get('Id_Tipo_Viculo').hasError('required')">
-                                Municipio é obrigatório. </mat-error>
+                                Tipo Vinculo é obrigatório. </mat-error>
                         </mat-form-field>
                     </div>
 
@@ -494,7 +501,7 @@
                             <mat-datepicker-toggle matSuffix [for]="Data_AdmissaoPicker"></mat-datepicker-toggle>
                             <mat-datepicker #Data_AdmissaoPicker></mat-datepicker>
                             <mat-error *ngIf="CadastroForm.get('Data_Admissao').hasError('required')">
-                                Data de validade é obrigatório. </mat-error>
+                                Data de Vinculo é obrigatória. </mat-error>
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
@@ -507,7 +514,7 @@
                                 </mat-option>
                             </mat-select>
                             <mat-error *ngIf="CadastroForm.get('Id_Nivel_Academico').hasError('required')">
-                                Nacionalidade é obrigatório. </mat-error>
+                                Nivel Academico é obrigatório. </mat-error>
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
@@ -520,7 +527,7 @@
                                 </mat-option>
                             </mat-select>
                             <mat-error *ngIf="CadastroForm.get('Id_Regime').hasError('required')">
-                                Nacionalidade é obrigatório. </mat-error>
+                                Regime é obrigatório. </mat-error>
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
@@ -533,7 +540,7 @@
                                 </mat-option>
                             </mat-select>
                             <mat-error *ngIf="CadastroForm.get('Id_Carreira').hasError('required')">
-                                Nacionalidade é obrigatório. </mat-error>
+                                Carreira é obrigatória. </mat-error>
                         </mat-form-field>
                     </div>
 
@@ -547,7 +554,7 @@
                                 </mat-option>
                             </mat-select>
                             <mat-error *ngIf="CadastroForm.get('Id_Categoria').hasError('required')">
-                                Nacionalidade é obrigatório. </mat-error>
+                                Categoria é obrigatório. </mat-error>
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
@@ -566,7 +573,7 @@
                                 </mat-option>
                             </mat-select>
                             <mat-error *ngIf="CadastroForm.get('Situacao').hasError('required')">
-                                Nacionalidade é obrigatório. </mat-error>
+                                Situação é obrigatória. </mat-error>
                         </mat-form-field>
                     </div>
 
@@ -580,7 +587,7 @@
                                 </mat-option>
                             </mat-select>
                             <mat-error *ngIf="CadastroForm.get('Id_Categoria').hasError('required')">
-                                Nacionalidade é obrigatório. </mat-error>
+                                Motivo é obrigatório. </mat-error>
                         </mat-form-field>
                     </div>
                 </div>
