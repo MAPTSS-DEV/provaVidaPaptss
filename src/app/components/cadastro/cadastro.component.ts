@@ -59,7 +59,8 @@ export class CadastroComponent implements OnInit {
   videoWidth = 0;
   videoHeight = 0;
 
-  imageUrl = '/assets/avatar.png';
+  imageUrl;
+  imageSpinner = '/assets/loadinSpinner.gif';
   // tslint:disable-next-line: variable-name
   constructor(private _formBuilder: FormBuilder,
     private config: ConfiguracaoService,
@@ -147,7 +148,11 @@ export class CadastroComponent implements OnInit {
     this.CadastroForm.get('Id_Trabalhador').valueChanges.subscribe(data => {
       this.config.BuscaFoto(data).subscribe(M => {
         // this.CadastroForm.controls.Foto.setValue('Florindo');
-        this.imageUrl = 'data:image/jpeg;base64,' + M[0].Foto;
+        if (M && M[0].Foto) {
+          this.imageUrl = 'data:image/jpeg;base64,' + M[0].Foto;
+        } else {
+          this.imageUrl = '/assets/avatar.png'
+        }
       });
     });
     //   this.imageUrl = 'data:image/jpeg;base64,' + this.DadosPessoais[0].Foto;

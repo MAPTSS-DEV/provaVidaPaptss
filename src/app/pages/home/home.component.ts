@@ -70,10 +70,14 @@ export class HomeComponent implements OnInit {
 
     // tslint:disable-next-line: typedef
     ngOnInit() {
+        this.user = localStorage.getItem('user');
+        this.loadData();
+    }
 
+    // Carregamento de dados na lista 
+    loadData() {
         /** spinner starts on init */
         this.spinner.show();
-        this.user = localStorage.getItem('user');
         this._PagamentosService.BuscaPagamentos().subscribe(response => {
             this.employeeInfoTable = response;
             // console.log(response);
@@ -83,7 +87,7 @@ export class HomeComponent implements OnInit {
         }, err => {
             this.spinner.hide();
         });
-
+        
         if (this.servico.subsVar === undefined) {
             this.servico.subsVar = this.servico.EmitirEvento.subscribe((res) => this.onRefresh());
         }
@@ -96,7 +100,8 @@ export class HomeComponent implements OnInit {
 
     // tslint:disable-next-line: typedef
     onRefresh() {
-        this.ngOnInit();
+        // this.ngOnInit();
+        this.loadData();
     }
 
     // tslint:disable-next-line: typedef
@@ -128,6 +133,7 @@ export class HomeComponent implements OnInit {
         this.matDialogRef.afterClosed()
             .subscribe(response => {
                 if (!response) {
+                    this.onRefresh();
                     return;
                 }
             });

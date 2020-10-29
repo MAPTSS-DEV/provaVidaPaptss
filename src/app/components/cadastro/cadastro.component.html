@@ -31,9 +31,13 @@
                         <!-- <h3 class="header">Fotografia Tipo Passe</h3> -->
                         <div class="form-group text-center">
                             <!-- <h3><b>Naturalidade</b></h3> -->
-                            <div>
+                            <div *ngIf="imageUrl">
                                 <input type="file" #Image ngModel accept="image/*" style="display:none;" id="file" name="file" formControlName="Foto" (change)="handleFileInput($event.target.files)" />
                                 <img [src]="imageUrl" (click)="Image.click()" style="width:130px;height:125px; object-fit:
+                                cover;" class="foto-passe">
+                            </div>
+                            <div *ngIf="!imageUrl">
+                                <img [src]="imageSpinner" style="width:130px;height:125px; object-fit:
                                 cover;" class="foto-passe">
                             </div>
                             <div class="btn-camera">
