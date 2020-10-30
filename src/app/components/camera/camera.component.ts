@@ -111,6 +111,7 @@ export class CameraComponent implements OnInit {
       () => console.log('complete')
     );
   }
+  
   OnSubmit(): void {
     //  console.log(this.PessoaForm);
     //  if (this.PessoaForm.valid) {
