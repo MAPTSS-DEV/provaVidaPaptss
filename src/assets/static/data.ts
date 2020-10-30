@@ -25,3 +25,16 @@ export const FIELDS_FORM_COMPLEMENTARES = [
     'BairroMorada',
     'Residencia'
 ]
+
+export const FIELDS_FORM_VINCULO = [
+  'Id_Centro',
+  'Centro_Id_Provincia',
+  'Id_Tipo_Viculo',
+  'Data_Admissao',
+  'Id_Nivel_Academico',
+  'Id_Regime',
+  'Id_Carreira',
+  'Id_Categoria',
+  'Situacao',
+  'Motivo'
+]

@@ -602,6 +602,6 @@
     </mat-tab-group>
 </div>
 <div mat-dialog-actions align="end">
-    <button mat-button (click)="prevFormTab()">Anterior</button>
-    <button mat-button (click)="nextFormTab()">Próximo</button>
+    <button mat-raised-button color="primary" (click)="changeTabIncrement(-1)" [disabled]="selectedTabIndex <= 0">Anterior</button>
+    <button mat-raised-button color="primary" (click)="changeTabIncrement(1)" [disabled]="selectedTabIndex >= 2">Próximo</button>
 </div>

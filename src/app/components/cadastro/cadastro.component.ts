@@ -1,4 +1,4 @@
-import { FIELDS_FORM_COMPLEMENTARES, FIELDS_FORM_PERSON } from './../../../assets/static/data';
+import { FIELDS_FORM_COMPLEMENTARES, FIELDS_FORM_PERSON, FIELDS_FORM_VINCULO } from './../../../assets/static/data';
 import { Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -353,8 +353,8 @@ export class CadastroComponent implements OnInit {
         this.selectedTabIndex = 0;
       } else if (!this.validarFormulario(FIELDS_FORM_COMPLEMENTARES)) {
         this.selectedTabIndex = 1;
-      } else {
-        this.selectedTabIndex = 3;
+      } else if (!this.validarFormulario(FIELDS_FORM_VINCULO)) {
+        this.selectedTabIndex = 2;
       }
     } else {
       this.selectedTabIndex = clickedIndex;
@@ -362,12 +362,14 @@ export class CadastroComponent implements OnInit {
     }
   }
 
-  prevFormTab() {
-    this.selectedTabIndex = this.selectedTabIndex <= 1 ? 3 : this.selectedTabIndex --;
-  }
-
-  nextFormTab() {
-    this.selectedTabIndex = this.selectedTabIndex >= 3 ? 1 : this.selectedTabIndex ++;
+  changeTabIncrement(val:number) {
+    if(this.selectedTabIndex <= 0 && val < 0){
+      this.selectedTabIndex = 2;
+    }else if (this.selectedTabIndex >= 2 && val > 0){
+      this.selectedTabIndex = 0;
+    }else{
+      this.selectedTabIndex += val;
+    }
   }
 
   public dismiss() {
