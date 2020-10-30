@@ -60,20 +60,22 @@ export class CadastroComponent implements OnInit {
   videoHeight = 0;
 
   imageUrl;
+  motivoEstado = false;
+
   imageSpinner = '/assets/loadinSpinner.gif';
   // tslint:disable-next-line: variable-name
   constructor(private _formBuilder: FormBuilder,
-    private config: ConfiguracaoService,
-    private renderer: Renderer2,
-    private service: CadastroService,
-    private cameraservico: CameraService,
+              private config: ConfiguracaoService,
+              private renderer: Renderer2,
+              private service: CadastroService,
+              private cameraservico: CameraService,
     // tslint:disable-next-line: variable-name
-    public _matDialog: MatDialog,
-    public cameraDialogRef: MatDialogRef<CameraComponent>,
-    public cadastroDialogRef: MatDialogRef<CadastroComponent>,
-    private spinner: NgxSpinnerService,
+              public _matDialog: MatDialog,
+              public cameraDialogRef: MatDialogRef<CameraComponent>,
+              public cadastroDialogRef: MatDialogRef<CadastroComponent>,
+              private spinner: NgxSpinnerService,
     // tslint:disable-next-line: variable-name
-    @Inject(MAT_DIALOG_DATA) public _data: any) {
+              @Inject(MAT_DIALOG_DATA) public _data: any) {
     //   console.log(_data.trabalhador);
     this.cadastro = _data.trabalhador;
     //    this.CadastroForm.patchValue( _data.trabalhador[0]);
@@ -199,6 +201,12 @@ export class CadastroComponent implements OnInit {
 
     this.CadastroForm.get('Situacao').valueChanges.subscribe(data => {
       this.Motivo = this.config.getSituacaoMotivo().filter((item) => {
+        if (data === 1) {
+          this.motivoEstado = true;
+          this.CadastroForm.controls.Motivo.setValue(data);
+       } else { this.motivoEstado = false; }
+
+     //  console.log
         return item.Codigo === Number(data);
       });
     });
@@ -344,7 +352,7 @@ export class CadastroComponent implements OnInit {
       if (!this.validarFormulario(FIELDS_FORM_PERSON)) {
         this.selectedTabIndex = 0;
       } else if (!this.validarFormulario(FIELDS_FORM_COMPLEMENTARES)) {
-        this.selectedTabIndex = 1
+        this.selectedTabIndex = 1;
       } else {
         this.selectedTabIndex = 3;
       }
