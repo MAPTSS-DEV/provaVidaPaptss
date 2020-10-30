@@ -339,9 +339,8 @@ export class CadastroComponent implements OnInit {
   onTabChanged($event) {
     let clickedIndex = $event.index;
     if (!this.CadastroForm.valid) {
-      console.log(this.validarFormulario(FIELDS_FORM_PERSON));
-      console.log(this.validarFormulario(FIELDS_FORM_COMPLEMENTARES));
-
+      // console.log(this.validarFormulario(FIELDS_FORM_PERSON));
+      // console.log(this.validarFormulario(FIELDS_FORM_COMPLEMENTARES));
       if (!this.validarFormulario(FIELDS_FORM_PERSON)) {
         this.selectedTabIndex = 0;
       } else if (!this.validarFormulario(FIELDS_FORM_COMPLEMENTARES)) {
@@ -353,6 +352,14 @@ export class CadastroComponent implements OnInit {
       this.selectedTabIndex = clickedIndex;
       this.hasError = false;
     }
+  }
+
+  prevFormTab() {
+    this.selectedTabIndex = this.selectedTabIndex <= 1 ? 3 : this.selectedTabIndex --;
+  }
+
+  nextFormTab() {
+    this.selectedTabIndex = this.selectedTabIndex >= 3 ? 1 : this.selectedTabIndex ++;
   }
 
   public dismiss() {
@@ -380,7 +387,7 @@ export class CadastroComponent implements OnInit {
 
       });
     });
-    this.ngOnInit();
+    // this.ngOnInit();
   }
 
   dataURItoBlob(dataURI: string): Observable<Blob> {
