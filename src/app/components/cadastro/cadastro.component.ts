@@ -84,7 +84,7 @@ export class CadastroComponent implements OnInit {
 
   ngOnInit(): void {
     this.CadastroForm = this._formBuilder.group({
-      Id_Trabalhador: ['', Validators.required],
+      Id_Trabalhador: [''],
       Trabalhador: ['', Validators.required],
       TrabalhadorNomeCorrigido: [''],
       Telefone: [''],

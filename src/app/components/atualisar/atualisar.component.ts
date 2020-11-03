@@ -326,7 +326,12 @@ export class AtualisarComponent implements OnInit {
     this.config.BuscaFoto(this.CadastroForm.controls.Id_Trabalhador.value)
       .subscribe(M => {
         //  console.log(M);
-        this.imageUrl = 'data:image/jpeg;base64,' + M[0].Foto;
+        //this.imageUrl = 'data:image/jpeg;base64,' + M[0].Foto;
+        if (M && M[0].Foto) {
+          this.imageUrl = 'data:image/jpeg;base64,' + M[0].Foto;
+        } else {
+          this.imageUrl = '/assets/avatar.png'
+        }
         // this.CadastroForm.controls.Foto.setValue('Florindo');
       });
   }

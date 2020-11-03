@@ -128,7 +128,7 @@
                             <div class="col-md-6">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Nome Completo</mat-label>
-                                    <input matInput formControlName="Trabalhador" style="width: 100%;" readonly/>
+                                    <input matInput formControlName="Trabalhador" style="width: 100%;" required />
                                     <mat-error *ngIf="CadastroForm.get('Trabalhador').hasError('required')">
                                         Nome do Trabalhador é obrigatório. </mat-error>
                                     <mat-error *ngIf="CadastroForm.get('Trabalhador').hasError('pattern')">
