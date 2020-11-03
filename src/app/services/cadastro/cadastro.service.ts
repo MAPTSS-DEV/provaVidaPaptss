@@ -16,7 +16,7 @@ export class CadastroService {
   EmitirEvento = new EventEmitter();
   subsVar: Subscription;
 
-  constructor( private http: HttpClient ) { }
+  constructor(private http: HttpClient) { }
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
@@ -27,21 +27,31 @@ export class CadastroService {
       return of(result as T);
     };
   }
+
   GravaTrabalhador(Trab: FormGroup) {
     //  console.log(user);
-     //  const reqHeader = new HttpHeaders({'No-Auth': 'True'});
-     //  const reqHeader = new HttpHeaders({ 'Content-Type': 'application/x-www-urlencoded', 'No-Auth': 'True' });
-      return this.http.post(fullUrl  + '/ActualizarCadastro/', Trab ).pipe(
-        timeout(30000)
-      );
-    }
+    //  const reqHeader = new HttpHeaders({'No-Auth': 'True'});
+    //  const reqHeader = new HttpHeaders({ 'Content-Type': 'application/x-www-urlencoded', 'No-Auth': 'True' });
+    return this.http.post(fullUrl + '/InserirTrabalhador/', Trab).pipe(
+      timeout(30000)
+    );
+  }
 
-    ApagaFoto(id): Observable<any[]> {
-      return this.http.get<any[]>(fullUrl + '/ApagarFoto/' + id ).pipe(
-        tap(heroes => console.log('detalhe do Trabalhador Eliminado com sucesso')),
+  AtualizarTrabalhador(Trab: FormGroup) {
+    //  console.log(user);
+    //  const reqHeader = new HttpHeaders({'No-Auth': 'True'});
+    //  const reqHeader = new HttpHeaders({ 'Content-Type': 'application/x-www-urlencoded', 'No-Auth': 'True' });
+    return this.http.post(fullUrl + '/ActualizarCadastro/', Trab).pipe(
+      timeout(30000)
+    );
+  }
 
-        catchError(this.handleError('Erro ao eliminar Trabalhador', []))
-      );
-    }
+  ApagaFoto(id): Observable<any[]> {
+    return this.http.get<any[]>(fullUrl + '/ApagarFoto/' + id).pipe(
+      tap(heroes => console.log('detalhe do Trabalhador Eliminado com sucesso')),
+
+      catchError(this.handleError('Erro ao eliminar Trabalhador', []))
+    );
+  }
 
 }

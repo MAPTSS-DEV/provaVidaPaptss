@@ -29,6 +29,10 @@
                     </li>
                 </ol>
                 <br>
+                <div mat-card-actions align="end">
+                    <button mat-raised-button color="primary" (click)="FormCadastro()">Registrar Pensionista</button>
+                </div>
+
                 <form [formGroup]="filterForm">
                     <div class="row">
                         <div class="col-md-6">
@@ -44,6 +48,7 @@
                         </div>
                     </div>
                 </form>
+
                 <mat-table #table class="table" [dataSource]="employeeInfoTableDataSource">
 
                     <!-- Coluna do ID -->
@@ -106,7 +111,7 @@
                                         center">
                                 <button mat-icon-button color="primary" title="Editar" [disabled]="detalhedocontracto.Situacao
                                             == '1' ||
-                                            detalhedocontracto.Situacao == '3'" (click)="FormCadastro(detalhedocontracto)">
+                                            detalhedocontracto.Situacao == '3'" (click)="FormAtualizar(detalhedocontracto)">
                                             <mat-icon>edit</mat-icon>
                                         </button>
                             </div>

@@ -1,0 +1,607 @@
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#ffffff" type="fire" [fullScreen]="true">
+    <p style="color: white"> A processar aguarde... </p>
+</ngx-spinner>
+<div mat-dialog-title>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="title"><strong>Atualização de Trabalhador</strong> </span>
+        <span class="element-spacer"></span>
+        <button style="float: right;" mat-icon-button (click)="dismiss()">
+            <mat-icon mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+</div>
+
+<div mat-dialog-content>
+    <mat-tab-group [dynamicHeight]="true" [dynamicWidth]="true" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChanged($event);">
+
+        <form name="CadastroForm" [formGroup]="CadastroForm" (ngSubmit)="OnSubmit()" novalidate>
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="example-tab-icon">assignment_ind</mat-icon>
+                    Dados Pessoais
+                </ng-template>
+                <br>
+                <!-- <form name="CadastroForm" [formGroup]="dadosPessoaisForm" novalidate> -->
+                <div *ngIf="hasError" class="alert alert-danger" role="alert">
+                    Erro Campo. O Campo <span *ngIf="fieldError == 'Documento'"> Número do BI</span> <span *ngIf="fieldError != 'Documento'">{{fieldError}}</span> é obrigatório e não foi preenchido.
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- <h3 class="header">Fotografia Tipo Passe</h3> -->
+                        <div class="form-group text-center">
+                            <!-- <h3><b>Naturalidade</b></h3> -->
+                            <div *ngIf="imageUrl">
+                                <input type="file" #Image ngModel accept="image/*" style="display:none;" id="file" name="file" formControlName="Foto" (change)="handleFileInput($event.target.files)" />
+                                <img [src]="imageUrl" (click)="Image.click()" style="width:130px;height:125px; object-fit:
+                                cover;" class="foto-passe">
+                            </div>
+                            <div *ngIf="!imageUrl">
+                                <img [src]="imageSpinner" style="width:130px;height:125px; object-fit:
+                                cover;" class="foto-passe">
+                            </div>
+                            <div class="btn-camera">
+                                <button mat-icon-button color="primary" (click)="FormCamera($event)" class=" btn-camera-trigger btn btn-info
+                                btn-sm" aria-label="Atualizar Foto">
+                                <mat-icon>photo_camera</mat-icon>
+                            </button>
+                            </div>
+                            <!-- <mat-icon class="icon-photo-change btn " (click)="FormCamera($event)"> photo_camera </mat-icon> -->
+                            <!-- <span></span>
+                            <button mat-icon-button color="primary" (click)="ApagarFoto()" class="btn btn-info
+                                btn-sm" aria-label="Apagar Foto">
+                                <mat-icon>delete_forever</mat-icon>
+                            </button> -->
+                            <!-- <mat-icon class="icon-photo-delete btn" (click)="ApagarFoto()"> delete_forever </mat-icon> -->
+                            <br>
+                            <!--  <button mat-raised-button color="accent" class="primary" (click)="FormCamera($event)"> -->
+                            <!--   <button mat-raised-button color="accent" class="primary" (click)="Image.click()">
+                                 <span>Selecione</span><mat-icon class="icon-photo-change"> photo_camera </mat-icon>
+                                <input #Image type="file" (change)="handleFileInput($event.target.files)" style="display:none;" /> -->
+                            <!--  </button> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <h3><b>A atualizar</b></h3>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field appearance="outline" class="mr-sm-12" fxFlex>
+                                    <mat-label>Telefone</mat-label>
+                                    <input matInput formControlName="Telefone" maxlength="10" />
+                                    <mat-icon matSuffix class="secondary-text">local_phone</mat-icon>
+                                    <!-- <mat-error *ngIf="CadastroForm.get('Telefone').hasError('required')">
+                                O Telefone é obrigatório. </mat-error> -->
+                                    <mat-error *ngIf="CadastroForm.get('Telefone').status ===
+                                'PENDING'">validando Telefone... </mat-error>
+                                    <mat-error *ngIf="CadastroForm.get('Telefone').status ===
+                                'VALID'">Telefone valido. </mat-error>
+                                    <mat-error *ngIf="CadastroForm.get('Telefone').hasError('TelefoneInvalido')">Número de Telefone ja Cadastrado. </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Nome Corrigido</mat-label>
+                                    <input matInput formControlName="TrabalhadorNomeCorrigido" style="width: 100%;" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3><b>Nº Agente / INSS</b></h3>
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Número de Agente</mat-label>
+                                    <input matInput formControlName="NIF" style="width: 100%;" required/>
+                                    <!--  <mat-icon matSuffix class="secondary-text">work</mat-icon> -->
+                                    <mat-error *ngIf="CadastroForm.get('NIF').hasError('required')">
+                                        Número de Agente do Trabalhador é obrigatório.
+                                    </mat-error>
+                                    <!--  <mat-error *ngIf="CadastroForm.get('Trabalhador').hasError('pattern')" > números não são permitido neste campo. </mat-error> -->
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Número Seg. Social</mat-label>
+                                    <input matInput formControlName="SegSocial" style="width: 100%;" required/>
+                                    <!--  <mat-icon matSuffix class="secondary-text">work</mat-icon> -->
+                                    <mat-error *ngIf="CadastroForm.get('SegSocial').hasError('required')">
+                                        Número da Segurança social do Trabalhador é obrigatório. </mat-error>
+                                    <!--  <mat-error *ngIf="CadastroForm.get('Trabalhador').hasError('pattern')" > números não são permitido neste campo. </mat-error> -->
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <h3><b>Identidade</b></h3>
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Nome Completo</mat-label>
+                                    <input matInput formControlName="Trabalhador" style="width: 100%;" readonly/>
+                                    <mat-error *ngIf="CadastroForm.get('Trabalhador').hasError('required')">
+                                        Nome do Trabalhador é obrigatório. </mat-error>
+                                    <mat-error *ngIf="CadastroForm.get('Trabalhador').hasError('pattern')">
+                                        números não são permitido neste campo.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-md-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Número do B.I</mat-label>
+                                    <input matInput formControlName="Documento" style="width: 100%;" required/>
+                                    <!--  <mat-icon matSuffix class="secondary-text">work</mat-icon> -->
+                                    <mat-error *ngIf="CadastroForm.get('Documento').hasError('required')">
+                                        Número do BI é obrigatório. </mat-error>
+                                    <!--  <mat-error *ngIf="CadastroForm.get('Trabalhador').hasError('pattern')" > números não são permitido neste campo. </mat-error> -->
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Data de emissão</mat-label>
+                                    <input matInput [matDatepicker]="DataEmissaoPicker" name="DataEmissao" formControlName="DataEmissao" required>
+                                    <mat-datepicker-toggle matSuffix [for]="DataEmissaoPicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #DataEmissaoPicker></mat-datepicker>
+                                    <mat-error *ngIf="CadastroForm.get('DataEmissao').hasError('required')">
+                                        Data Emissão é obrigatório. </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-md-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Data de Validade</mat-label>
+                                    <input matInput [matDatepicker]="DataValidadePicker" name="DataValidade" formControlName="DataValidade" required>
+                                    <mat-datepicker-toggle matSuffix [for]="DataValidadePicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #DataValidadePicker></mat-datepicker>
+                                    <mat-error *ngIf="CadastroForm.get('DataValidade').hasError('required')">
+                                        Data de validade é obrigatório. </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field appearance="outline" class="mr-sm-12">
+                                    <mat-label>Local de Emissão</mat-label>
+                                    <mat-select name="LocalEmissao" formControlName="LocalEmissao" required>
+                                        <mat-option>-seleccione-</mat-option>
+                                        <mat-option *ngFor="let n of provMorada" [value]="n.Id_Provincia">
+                                            {{n.Provincia}}
+                                        </mat-option> -->
+                                    </mat-select>
+                                    <mat-error *ngIf="CadastroForm.get('LocalEmissao').hasError('required')">
+                                        Local de emissão é obrigatório. </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-md-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Estado Civíl</mat-label>
+                                    <mat-select name="id_estado_civil" formControlName="id_estado_civil" required style="width: 100%;">
+                                        <mat-option>-seleccione-</mat-option>
+                                        <mat-option *ngFor="let n of estadocivil" [value]="n.Id_estado_civil">
+                                            {{n.estado_civil}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="CadastroForm.get('id_estado_civil').hasError('required')">
+                                        Estado civíl é obrigatório. </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Genero</mat-label>
+                                    <mat-select placeholder="Genero" required name="Id_sexo" formControlName="Id_sexo">
+                                        <mat-option *ngFor="let s of sexo" [value]="s.Id_sexo">{{s.Sexo}}</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="CadastroForm.get('Id_sexo').hasError('required')">Genero é obrigatório</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-md-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Data de Nascimento</mat-label>
+                                    <input matInput [matDatepicker]="DataNascimentoPicker" name="DataNascimento" formControlName="DataNascimento" required>
+                                    <mat-datepicker-toggle matSuffix [for]="DataNascimentoPicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #DataNascimentoPicker></mat-datepicker>
+                                    <mat-error *ngIf="CadastroForm.get('DataNascimento').hasError('required')">
+                                        Data nascimento é obrigatório. </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Nome do Pai</mat-label>
+                                    <input matInput formControlName="Nome_Pai" style="width: 100%;" />
+                                    <!--   <mat-icon matSuffix class="secondary-text">work</mat-icon> -->
+                                    <!-- <mat-error *ngIf="CadastroForm.get('Nome_Pai').hasError('required')">
+                                Nome do Pai é obrigatório. </mat-error> -->
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-md-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Nome da Mãe</mat-label>
+                                    <input matInput formControlName="Nome_Mae" style="width: 100%;" />
+                                    <!-- <mat-error *ngIf="CadastroForm.get('Nome_Mae').hasError('required')">
+                                Nome da Mãe é obrigatório. </mat-error> -->
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- </form> -->
+            </mat-tab>
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="example-tab-icon">assignment</mat-icon>
+                    Dados Complementares
+                </ng-template>
+                <br>
+                <div *ngIf="hasError" class="alert alert-danger" role="alert">
+                    Erro Campo. O Campo {{fieldError}} é obrigatório e não foi preenchido.
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3><b>Naturalidade</b></h3>
+                        <!-- <form name="CadastroForm" [formGroup]="CadastroForm" (ngSubmit)="OnSubmit()" novalidate> -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Nacionalidade</mat-label>
+                                    <mat-select name="Id_Nacionalidade" formControlName="Id_Nacionalidade" required>
+                                        <mat-option>-seleccione-</mat-option>
+                                        <mat-option *ngFor="let n of nacionalidade" [value]="n.Id_Pais">
+                                            {{n.Pais}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="CadastroForm.get('Id_Nacionalidade').hasError('required')">
+                                        Nacionalidade é obrigatório. </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field appearance="outline" class="mr-sm-12">
+                                    <mat-label>Província</mat-label>
+                                    <mat-select name="Id_Provincia" formControlName="Id_Provincia" required>
+                                        <mat-option>-seleccione-</mat-option>
+                                        <mat-option *ngFor="let n of prov" [value]="n.Id_Provincia">
+                                            {{n.Provincia}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="CadastroForm.get('Id_Provincia').hasError('required')">
+                                        Provincia é obrigatório. </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <mat-form-field appearance="outline" class="mr-sm-12">
+                                    <mat-label>Municipio</mat-label>
+                                    <mat-select name="Id_Municipio" formControlName="Id_Municipio" required>
+                                        <mat-option>-seleccione-</mat-option>
+                                        <mat-option *ngFor="let n of Mun" [value]="n.Id_Municipio">
+                                            {{n.Municipio}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="CadastroForm.get('Id_Municipio').hasError('required')">
+                                        Municipio é obrigatório. </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Comuna</mat-label>
+                                    <mat-select name="Id_Comuna" formControlName="Id_Comuna" required>
+                                        <mat-option>-seleccione-</mat-option>
+                                        <mat-option *ngFor="let n of Comun" [value]="n.Id_Comuna">
+                                            {{n.Comuna}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="CadastroForm.get('Id_Comuna').hasError('required')">
+                                        Comuna é obrigatória. </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Distrito</mat-label>
+                                    <mat-select name="Id_Distrito" formControlName="Id_Distrito" required>
+                                        <mat-option>-seleccione-</mat-option>
+                                        <mat-option *ngFor="let n of distrito" [value]="n.Id_Distrito">
+                                            {{n.Distrito}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="CadastroForm.get('Id_Distrito').hasError('required')">
+                                        Distrito é obrigatório. </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Bairro</mat-label>
+                                    <input matInput formControlName="Bairro" style="width: 100%;" required/>
+                                    <mat-error *ngIf="CadastroForm.get('Bairro').hasError('required')">
+                                        Bairro é obrigatório.
+                                    </mat-error>
+                                    <!--  <mat-icon matSuffix class="secondary-text">work</mat-icon> -->
+                                    <!--  <mat-error *ngIf="CadastroForm.get('Bairro').hasError('required')" > Número da Segurança social do Trabalhador é obrigatório. </mat-error> -->
+                                    <!--  <mat-error *ngIf="CadastroForm.get('Trabalhador').hasError('pattern')" > números não são permitido neste campo. </mat-error> -->
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3><b>Morada Atual</b></h3>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field appearance="outline" class="mr-sm-12">
+                                    <mat-label>Província</mat-label>
+                                    <mat-select name="Id_ProvinciaMorada" formControlName="Id_ProvinciaMorada" required>
+                                        <mat-option>-seleccione-</mat-option>
+                                        <mat-option *ngFor="let n of provMorada" [value]="n.Id_Provincia">
+                                            {{n.Provincia}}
+                                        </mat-option> -->
+                                    </mat-select>
+                                    <mat-error *ngIf="CadastroForm.get('Id_Provincia').hasError('required')">
+                                        Provincia é obrigatório. </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field appearance="outline" class="mr-sm-12">
+                                    <mat-label>Municipio</mat-label>
+                                    <mat-select name="Id_MunicipioMorada" formControlName="Id_MunicipioMorada" required>
+                                        <mat-option>-seleccione-</mat-option>
+                                        <mat-option *ngFor="let n of MunMorada" [value]="n.Id_Municipio">
+                                            {{n.Municipio}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="CadastroForm.get('Id_MunicipioMorada').hasError('required')">
+                                        Municipio é obrigatório. </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Comuna</mat-label>
+                                    <mat-select name="Id_ComunaMorada" formControlName="Id_ComunaMorada" required>
+                                        <mat-option>-seleccione-</mat-option>
+                                        <mat-option *ngFor="let n of ComuMorada" [value]="n.Id_Comuna">
+                                            {{n.Comuna}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="CadastroForm.get('Id_ComunaMorada').hasError('required')">
+                                        Comuna é obrigatória. </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Distrito</mat-label>
+                                    <mat-select name="Id_DistritoMorada" formControlName="Id_DistritoMorada" required>
+                                        <mat-option>-seleccione-</mat-option>
+                                        <mat-option *ngFor="let n of distritoMorada" [value]="n.Id_Distrito">
+                                            {{n.Distrito}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="CadastroForm.get('Id_DistritoMorada').hasError('required')">
+                                        Distrito é obrigatório. </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Bairro</mat-label>
+                                    <input matInput formControlName="BairroMorada" style="width: 100%;" required/>
+                                    <mat-error *ngIf="CadastroForm.get('BairroMorada').hasError('required')">
+                                        Bairro é obrigatório. </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Residencia</mat-label>
+                                    <input matInput formControlName="Residencia" style="width: 100%;" required/>
+                                    <mat-error *ngIf="CadastroForm.get('Residencia').hasError('required')">
+                                        Residencia é obrigatório. </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- </form> -->
+            </mat-tab>
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="example-tab-icon">description</mat-icon>
+                    Vinculo
+                </ng-template>
+                <br>
+                <div *ngIf="hasError" class="alert alert-danger" role="alert">
+                    Erro Campo. O Campo {{fieldError}} é obrigatório e não foi preenchido.
+                </div>
+                <!-- <form name="CadastroForm" [formGroup]="CadastroForm" (ngSubmit)="OnSubmit()" novalidate> -->
+                <!--  <h3><b>Vinculo</b></h3> -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <mat-form-field appearance="outline" class="mr-sm-12">
+                            <mat-label>Unidade Organica</mat-label>
+                            <mat-select name="Id_Centro" formControlName="Id_Centro" required>
+                                <mat-option>-seleccione-</mat-option>
+                                <mat-option *ngFor="let n of centro" [value]="n.Id_Centro">
+                                    {{n.Centro}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="CadastroForm.get('Id_Centro').hasError('required')">
+                                Unidade Organica é obrigatória. </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-6">
+                        <mat-form-field appearance="outline" class="mr-sm-12">
+                            <mat-label>Província</mat-label>
+                            <mat-select name="Centro_Id_Provincia" formControlName="Centro_Id_Provincia" required>
+                                <mat-option>-seleccione-</mat-option>
+                                <mat-option *ngFor="let n of provMorada" [value]="n.Id_Provincia">
+                                    {{n.Provincia}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="CadastroForm.get('Centro_Id_Provincia').hasError('required')">
+                                Provincia é obrigatório. </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-6">
+                        <mat-form-field appearance="outline" class="mr-sm-12">
+                            <mat-label>Tipo vinculo</mat-label>
+                            <mat-select name="Id_Tipo_Viculo" formControlName="Id_Tipo_Viculo" required>
+                                <mat-option>-seleccione-</mat-option>
+                                <mat-option *ngFor="let n of tipoVinculo" [value]="n.Id_Tipo_Vinculo">
+                                    {{n.Tipo_vinculo}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="CadastroForm.get('Id_Tipo_Viculo').hasError('required')">
+                                Tipo Vinculo é obrigatório. </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-6">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Data de Vinculo</mat-label>
+                            <input matInput [matDatepicker]="Data_AdmissaoPicker" name="Data_Admissao" formControlName="Data_Admissao" required>
+                            <mat-datepicker-toggle matSuffix [for]="Data_AdmissaoPicker"></mat-datepicker-toggle>
+                            <mat-datepicker #Data_AdmissaoPicker></mat-datepicker>
+                            <mat-error *ngIf="CadastroForm.get('Data_Admissao').hasError('required')">
+                                Data de Vinculo é obrigatória. </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Nivel Academico</mat-label>
+                            <mat-select name="Id_Nivel_Academico" formControlName="Id_Nivel_Academico" required>
+                                <mat-option>-seleccione-</mat-option>
+                                <mat-option *ngFor="let n of nivelAcademico" [value]="n.Id_Nivel_Academico">
+                                    {{n.Nivel_Academico}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="CadastroForm.get('Id_Nivel_Academico').hasError('required')">
+                                Nivel Academico é obrigatório. </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Regime</mat-label>
+                            <mat-select name="Id_Regime" formControlName="Id_Regime" required>
+                                <mat-option>-seleccione-</mat-option>
+                                <mat-option *ngFor="let n of regime" [value]="n.Id_Regime">
+                                    {{n.Regime}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="CadastroForm.get('Id_Regime').hasError('required')">
+                                Regime é obrigatório. </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Carreira</mat-label>
+                            <mat-select name="Id_Carreira" formControlName="Id_Carreira" required>
+                                <mat-option>-seleccione-</mat-option>
+                                <mat-option *ngFor="let n of carreira" [value]="n.Id_Carreira">
+                                    {{n.Carreira}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="CadastroForm.get('Id_Carreira').hasError('required')">
+                                Carreira é obrigatória. </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-6">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Categoria</mat-label>
+                            <mat-select name="Id_Categoria" formControlName="Id_Categoria" required>
+                                <mat-option>-seleccione-</mat-option>
+                                <mat-option *ngFor="let n of categoria" [value]="n.Id_Categoria">
+                                    {{n.Categoria}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="CadastroForm.get('Id_Categoria').hasError('required')">
+                                Categoria é obrigatório. </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field appearance="outline">
+                            <mat-label>função</mat-label>
+                            <input matInput formControlName="Funcao" style="width: 100%;" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Situação do cadastro</mat-label>
+                            <mat-select name="Situacao" formControlName="Situacao" required>
+                                <mat-option>-seleccione-</mat-option>
+                                <mat-option *ngFor="let n of situacao" [value]="n.Codigo">
+                                    {{n.Descricao}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="CadastroForm.get('Situacao').hasError('required')">
+                                Situação é obrigatória. </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-6">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Motivo</mat-label>
+                            <mat-select name="Motivo" formControlName="Motivo" required [disabled]="motivoEstado">
+                                <mat-option>-seleccione-</mat-option>
+                                <mat-option *ngFor="let n of Motivo" [value]="n.Id_Motivo">
+                                    {{n.Motivo}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="CadastroForm.get('Motivo').hasError('required')">
+                                Motivo é obrigatório. </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" (click)="OnSubmit()" style="margin:5px;" [disabled]="!CadastroForm.valid" class="btn btn-success">Salvar</button>
+                    <button type="button" class="btn btn-danger" (click)="dismiss()" data-dismiss="modal">Sair</button>
+                </div>
+                <!-- </form> -->
+            </mat-tab>
+        </form>
+
+    </mat-tab-group>
+</div>
+<div mat-dialog-actions align="end">
+    <button mat-raised-button color="primary" (click)="changeTabIncrement(-1)" [disabled]="selectedTabIndex <= 0">Anterior</button>
+    <button mat-raised-button color="primary" (click)="changeTabIncrement(1)" [disabled]="selectedTabIndex >= 2">Próximo</button>
+</div>

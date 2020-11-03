@@ -5,17 +5,18 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { Cadastro, Carreira, Categoria, Centro, Comuna, Distrito, EstadoCivil, Municipios, NivelAcademico, Pais, Provincias, Regime, Sexo, SituacaoCadastro, SituacaoMotivo, TipoVinculo } from '@app/models';
 import { CadastroService, CameraService, ConfiguracaoService } from '@app/services';
 import { Observable, Observer } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { CameraComponent } from '..';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+
 @Component({
-  selector: 'app-cadastro',
-  templateUrl: './cadastro.component.html',
-  styleUrls: ['./cadastro.component.scss']
+  selector: 'app-atualisar',
+  templateUrl: './atualisar.component.html',
+  styleUrls: ['./atualisar.component.scss']
 })
-export class CadastroComponent implements OnInit {
+export class AtualisarComponent implements OnInit {
+
 
   @ViewChild('video', { static: true }) videoElement: ElementRef;
   @ViewChild('canvas', { static: true }) canvas: ElementRef;
@@ -62,8 +63,7 @@ export class CadastroComponent implements OnInit {
   imageUrl;
   motivoEstado = false;
 
-  imageSpinner = '/assets/avatar.png';
-  // imageSpinner = '/assets/loadinSpinner.gif';
+  imageSpinner = '/assets/loadinSpinner.gif';
   // tslint:disable-next-line: variable-name
   constructor(private _formBuilder: FormBuilder,
               private config: ConfiguracaoService,
@@ -73,12 +73,12 @@ export class CadastroComponent implements OnInit {
     // tslint:disable-next-line: variable-name
               public _matDialog: MatDialog,
               public cameraDialogRef: MatDialogRef<CameraComponent>,
-              public cadastroDialogRef: MatDialogRef<CadastroComponent>,
+              public cadastroDialogRef: MatDialogRef<AtualisarComponent>,
               private spinner: NgxSpinnerService,
     // tslint:disable-next-line: variable-name
               @Inject(MAT_DIALOG_DATA) public _data: any) {
     //   console.log(_data.trabalhador);
-    // this.cadastro = _data.trabalhador;
+    this.cadastro = _data.trabalhador;
     //    this.CadastroForm.patchValue( _data.trabalhador[0]);
   }
 
@@ -144,7 +144,7 @@ export class CadastroComponent implements OnInit {
 
     // console.log(this.cadastro);
     // ========================================================================
-    // this.CadastroForm.patchValue(this.cadastro);
+    this.CadastroForm.patchValue(this.cadastro);
 
     this.atualisarFotografia();
 
@@ -284,6 +284,27 @@ export class CadastroComponent implements OnInit {
 
     // =======================================================================
 
+    // this.CadastroForm.get('Id_Provincia').valueChanges
+    //   .pipe(
+    //     // tap(estado => console.log('Novo estado: ', estado)),
+    //     map((estado) => this.prov.filter(e => e.Id_Provincia === estado)),
+    //     map(estados => estados && estados.length > 0 ? estados[0].Id_Provincia : null),
+    //     switchMap((estadoId: number) => this.config.ListaMunicipio(estadoId))
+    //     , tap(console.log)
+    //   )
+    //   .subscribe(M => this.Mun = M);
+
+
+    // this.CadastroForm.get('Id_ProvinciaMorada').valueChanges
+    //   .pipe(
+    //     // tap(estado => console.log('Novo estado: ', estado)),
+    //     map((prov) => this.prov.filter(e => e.Id_Provincia === prov)),
+    //     map(prov => prov && prov.length > 0 ? prov[0].Id_Provincia : null),
+    //     switchMap((provId: number) => this.config.ListaMunicipio(provId))
+    //     //  tap(console.log)
+    //   )
+    //   .subscribe(M => this.MunMorada = M);
+
     if (this.service.subsVar === undefined) {
       this.service.subsVar = this.service.
         EmitirEvento.subscribe((res) => {
@@ -399,14 +420,14 @@ export class CadastroComponent implements OnInit {
     //   console.log(this.CadastroForm.value);
     if (this.CadastroForm.valid) {
       this.spinner.show();
-      this.service.GravaTrabalhador(this.CadastroForm.value).subscribe(res => {
+      this.service.AtualizarTrabalhador(this.CadastroForm.value).subscribe(res => {
         // console.log(res);
         this.service.EmitirEvento.emit();
         this.spinner.hide();
         Swal.fire({
           position: 'center',
           icon: 'success',
-          title: `Candidato ${this.CadastroForm.value.Trabalhador} adicionado com sucesso`,
+          title: `Candidato ${this.CadastroForm.value.Trabalhador} atualisado com sucesso`,
           showConfirmButton: false,
           timer: 3500
         });
@@ -417,7 +438,7 @@ export class CadastroComponent implements OnInit {
         Swal.fire({
           position: 'center',
           icon: 'error',
-          title: `Occorreu um erro ao Adicionar o Candidato ${this.CadastroForm.value.Trabalhador}.`,
+          title: `Occorreu um erro ao Atualizar o Candidato ${this.CadastroForm.value.Trabalhador}.`,
           showConfirmButton: false,
           timer: 3500
         });
@@ -544,5 +565,6 @@ export class CadastroComponent implements OnInit {
     reader.readAsDataURL(this.fileToUpload);
     //  }
   }
+
 
 }

@@ -28,6 +28,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { CadastroComponent } from '@app/components';
 import { CameraComponent } from './components/camera/camera.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { AtualisarComponent } from './components/atualisar/atualisar.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     HomeComponent,
     CadastroComponent,
     CameraComponent,
+    AtualisarComponent,
   ],
   imports: [
     BrowserModule,

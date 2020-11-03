@@ -2,7 +2,7 @@
 import { Component, Inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 
 import { Pagamentos, ResumoGeral, User } from '@app/models';
-import { AccountService, CadastroService, GeraisService } from '@app/services';
+import { CadastroService, GeraisService } from '@app/services';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -11,6 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { FilesDataSource } from '@app/helpers/datasource';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AtualisarComponent } from '@app/components/atualisar/atualisar.component';
 
 @Component({
     selector: 'app-home',
@@ -59,7 +60,8 @@ export class HomeComponent implements OnInit {
         // tslint:disable-next-line: variable-name
         private _PagamentosService: GeraisService,
         public servico: CadastroService,
-        public matDialogRef: MatDialogRef<CadastroComponent>,
+        public cadastroDialogRef: MatDialogRef<CadastroComponent>,
+        public atualizarDialogRef: MatDialogRef<AtualisarComponent>,
         private spinner: NgxSpinnerService,
         // tslint:disable-next-line: variable-name
         @Inject(MAT_DIALOG_DATA) public _data: any
@@ -117,9 +119,30 @@ export class HomeComponent implements OnInit {
 
 
 
-    FormCadastro(trab): void {
+    FormCadastro(): void {
         //    console.log(trab);
-        this.matDialogRef = this._matDialog.open(CadastroComponent, {
+        this.cadastroDialogRef = this._matDialog.open(CadastroComponent, {
+            width: '790px',
+            height: '800px',
+            data: {
+                action: 'add'
+            },
+            disableClose: true
+        });
+
+
+        this.cadastroDialogRef.afterClosed()
+            .subscribe(response => {
+                if (!response) {
+                    this.onRefresh();
+                    return;
+                }
+            });
+    }
+
+    FormAtualizar(trab): void {
+        //    console.log(trab);
+        this.atualizarDialogRef = this._matDialog.open(AtualisarComponent, {
             width: '790px',
             height: '800px',
             data: {
@@ -130,7 +153,7 @@ export class HomeComponent implements OnInit {
         });
 
 
-        this.matDialogRef.afterClosed()
+        this.atualizarDialogRef.afterClosed()
             .subscribe(response => {
                 if (!response) {
                     this.onRefresh();
